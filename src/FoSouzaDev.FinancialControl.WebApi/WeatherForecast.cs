@@ -1,4 +1,4 @@
-namespace FoSouzaDev.UserManagement.WebApi
+namespace FoSouzaDev.FinancialControl.WebApi
 {
     public class WeatherForecast
     {

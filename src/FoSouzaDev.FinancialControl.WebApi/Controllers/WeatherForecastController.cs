@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoSouzaDev.UserManagement.WebApi.Controllers
+namespace FoSouzaDev.FinancialControl.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
