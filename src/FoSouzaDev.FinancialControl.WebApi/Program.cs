@@ -1,6 +1,7 @@
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
+using Microsoft.OpenApi.Models;
 
 namespace FoSouzaDev.FinancialControl.WebApi;
 
@@ -10,28 +11,66 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddMicrosoftIdentityWebApi(options =>
+        // Add services to the container.
+
+        builder.Services.AddRouting(options =>
         {
-            builder.Configuration.Bind("AzureAd", options);
-            options.TokenValidationParameters.NameClaimType = "name";
-            options.TokenValidationParameters.ClockSkew = new TimeSpan(0, 0, 5);
-            options.TokenValidationParameters.ValidateAudience = true;
-            options.TokenValidationParameters.ValidateIssuer = true;
-            options.TokenValidationParameters.ValidateLifetime = true;
-        }, options => { builder.Configuration.Bind("AzureAd", options); });
+            options.LowercaseUrls = true;
+            options.LowercaseQueryStrings = true;
+        });
+        builder.Services.AddControllers().AddNewtonsoftJson();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen(c =>
+        {
+            OpenApiSecurityScheme securityScheme = new()
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "JWT Authorization header using the Bearer scheme."
+            };
+
+            c.AddSecurityDefinition("Bearer", securityScheme);
+
+            OpenApiSecurityRequirement securityRequirement = new()
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            };
+
+            c.AddSecurityRequirement(securityRequirement);
+        });
+
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddMicrosoftIdentityWebApi(options =>
+            {
+                builder.Configuration.Bind("AzureAd", options);
+                options.TokenValidationParameters.NameClaimType = "name";
+                options.TokenValidationParameters.ClockSkew = new TimeSpan(0, 0, 5);
+                options.TokenValidationParameters.ValidateAudience = true;
+                options.TokenValidationParameters.ValidateIssuer = true;
+                options.TokenValidationParameters.ValidateLifetime = false;
+            }, options => { builder.Configuration.Bind("AzureAd", options); });
 
         builder.Services.AddAuthorization(config =>
         {
-            config.AddPolicy("AuthZPolicy", policyBuilder =>
-                policyBuilder.Requirements.Add(new ScopeAuthorizationRequirement() { RequiredScopesConfigurationKey = $"AzureAd:Scopes" }));
+            config.AddPolicy("MicrosoftIdentityPolicy", policyBuilder =>
+                policyBuilder.Requirements.Add(new ScopeAuthorizationRequirement()
+                {
+                    RequiredScopesConfigurationKey = $"AzureAd:Scopes"
+                }));
         });
-
-        // Add services to the container.
-
-        builder.Services.AddControllers();
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
 
         var app = builder.Build();
 
@@ -41,6 +80,7 @@ public class Program
             app.UseSwaggerUI();
         }
 
+        //app.MapSwagger().RequireAuthorization();
         app.UseAuthentication();
         app.UseAuthorization();
 

@@ -5,13 +5,23 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1D82872E-8DED-4885-9120-9E6953F5DE14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoSouzaDev.FinancialControl.WebApi", "src\FoSouzaDev.FinancialControl.WebApi\FoSouzaDev.FinancialControl.WebApi.csproj", "{EF6EB2F9-CC6D-4296-B64B-B27A80D66A51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoSouzaDev.FinancialControl.WebApi", "src\FoSouzaDev.FinancialControl.WebApi\FoSouzaDev.FinancialControl.WebApi.csproj", "{EF6EB2F9-CC6D-4296-B64B-B27A80D66A51}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4D0BEA87-1975-4748-B3B7-1550D18F8ABC}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoSouzaDev.FinancialControl.Application", "src\FoSouzaDev.FinancialControl.Application\FoSouzaDev.FinancialControl.Application.csproj", "{1352775C-5B09-4A5B-8333-BEEE3E020B77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoSouzaDev.FinancialControl.Domain", "src\FoSouzaDev.FinancialControl.Domain\FoSouzaDev.FinancialControl.Domain.csproj", "{7A95E997-A3FD-4535-8C59-F0361E9B9695}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoSouzaDev.FinancialControl.Infrastructure", "src\FoSouzaDev.FinancialControl.Infrastructure\FoSouzaDev.FinancialControl.Infrastructure.csproj", "{8B3E8476-5578-49C0-829F-92442AF47F8A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B9635E83-2CEC-4080-AB30-22C70F98B4A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoSouzaDev.FinancialControl.UnitaryTests", "tests\FoSouzaDev.FinancialControl.UnitaryTests\FoSouzaDev.FinancialControl.UnitaryTests.csproj", "{E1CA33FC-1443-49F2-A49E-474E417185E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,11 +33,34 @@ Global
 		{EF6EB2F9-CC6D-4296-B64B-B27A80D66A51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF6EB2F9-CC6D-4296-B64B-B27A80D66A51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF6EB2F9-CC6D-4296-B64B-B27A80D66A51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1352775C-5B09-4A5B-8333-BEEE3E020B77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1352775C-5B09-4A5B-8333-BEEE3E020B77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1352775C-5B09-4A5B-8333-BEEE3E020B77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1352775C-5B09-4A5B-8333-BEEE3E020B77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A95E997-A3FD-4535-8C59-F0361E9B9695}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A95E997-A3FD-4535-8C59-F0361E9B9695}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A95E997-A3FD-4535-8C59-F0361E9B9695}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A95E997-A3FD-4535-8C59-F0361E9B9695}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B3E8476-5578-49C0-829F-92442AF47F8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B3E8476-5578-49C0-829F-92442AF47F8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B3E8476-5578-49C0-829F-92442AF47F8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B3E8476-5578-49C0-829F-92442AF47F8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1CA33FC-1443-49F2-A49E-474E417185E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1CA33FC-1443-49F2-A49E-474E417185E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1CA33FC-1443-49F2-A49E-474E417185E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1CA33FC-1443-49F2-A49E-474E417185E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{EF6EB2F9-CC6D-4296-B64B-B27A80D66A51} = {1D82872E-8DED-4885-9120-9E6953F5DE14}
+		{1352775C-5B09-4A5B-8333-BEEE3E020B77} = {1D82872E-8DED-4885-9120-9E6953F5DE14}
+		{7A95E997-A3FD-4535-8C59-F0361E9B9695} = {1D82872E-8DED-4885-9120-9E6953F5DE14}
+		{8B3E8476-5578-49C0-829F-92442AF47F8A} = {1D82872E-8DED-4885-9120-9E6953F5DE14}
+		{E1CA33FC-1443-49F2-A49E-474E417185E7} = {B9635E83-2CEC-4080-AB30-22C70F98B4A3}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A0DD32A1-FD31-488F-8967-52C5FF4A0B66}
 	EndGlobalSection
 EndGlobal
