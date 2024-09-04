@@ -10,4 +10,8 @@
     <ProjectReference Include="..\FoSouzaDev.FinancialControl.Domain\FoSouzaDev.FinancialControl.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="FoSouzaDev.FinancialControl.WebApi" />
+  </ItemGroup>
+  
 </Project>

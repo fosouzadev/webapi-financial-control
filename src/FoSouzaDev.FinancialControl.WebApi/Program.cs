@@ -1,3 +1,5 @@
+using FoSouzaDev.FinancialControl.Domain.Repositories;
+using FoSouzaDev.FinancialControl.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
@@ -10,7 +12,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
+        AddApplicationServices(builder.Services);
 
         builder.Services.AddRouting(options =>
         {
@@ -22,7 +24,7 @@ public class Program
 
         AddSwagger(builder.Services);
 
-        AddAuth(builder);
+        AddAuth(builder.Services, builder.Configuration);
 
         WebApplication app = builder.Build();
 
@@ -38,6 +40,11 @@ public class Program
         app.MapControllers();
 
         app.Run();
+    }
+
+    private static void AddApplicationServices(IServiceCollection services)
+    {
+        services.AddSingleton<IFinancialMovementCategoryRepository, FinancialMovementCategoryRepository>();
     }
 
     private static void AddSwagger(IServiceCollection services)
@@ -75,20 +82,20 @@ public class Program
         });
     }
 
-    private static void AddAuth(WebApplicationBuilder builder)
+    private static void AddAuth(IServiceCollection services, IConfiguration configuration)
     {
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddMicrosoftIdentityWebApi(options =>
             {
-                builder.Configuration.Bind("AzureAd", options);
+                configuration.Bind("AzureAd", options);
                 options.TokenValidationParameters.NameClaimType = "name";
                 options.TokenValidationParameters.ClockSkew = new TimeSpan(0, 0, 5);
                 options.TokenValidationParameters.ValidateAudience = true;
                 options.TokenValidationParameters.ValidateIssuer = true;
                 options.TokenValidationParameters.ValidateLifetime = false;
-            }, options => { builder.Configuration.Bind("AzureAd", options); });
+            }, options => { configuration.Bind("AzureAd", options); });
 
-        builder.Services.AddAuthorization(config =>
+        services.AddAuthorization(config =>
         {
             config.AddPolicy("MicrosoftIdentityPolicy", policyBuilder =>
                 policyBuilder.Requirements.Add(new ScopeAuthorizationRequirement()

@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FoSouzaDev.FinancialControl.Application\FoSouzaDev.FinancialControl.Application.csproj" />
+    <ProjectReference Include="..\FoSouzaDev.FinancialControl.Infrastructure\FoSouzaDev.FinancialControl.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

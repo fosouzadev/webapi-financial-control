@@ -1,7 +1,6 @@
-﻿namespace FoSouzaDev.FinancialControl.Application
-{
-    public class Class1
-    {
+﻿namespace FoSouzaDev.FinancialControl.Application;
 
-    }
+public class Class1
+{
+
 }
