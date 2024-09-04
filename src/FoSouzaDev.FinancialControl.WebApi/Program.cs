@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
@@ -20,7 +19,30 @@ public class Program
         });
         builder.Services.AddControllers().AddNewtonsoftJson();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen(c =>
+
+        AddSwagger(builder.Services);
+
+        AddAuth(builder);
+
+        WebApplication app = builder.Build();
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.MapControllers();
+
+        app.Run();
+    }
+
+    private static void AddSwagger(IServiceCollection services)
+    {
+        services.AddSwaggerGen(c =>
         {
             OpenApiSecurityScheme securityScheme = new()
             {
@@ -51,7 +73,10 @@ public class Program
 
             c.AddSecurityRequirement(securityRequirement);
         });
+    }
 
+    private static void AddAuth(WebApplicationBuilder builder)
+    {
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddMicrosoftIdentityWebApi(options =>
             {
@@ -71,21 +96,5 @@ public class Program
                     RequiredScopesConfigurationKey = $"AzureAd:Scopes"
                 }));
         });
-
-        var app = builder.Build();
-
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
-
-        //app.MapSwagger().RequireAuthorization();
-        app.UseAuthentication();
-        app.UseAuthorization();
-
-        app.MapControllers();
-
-        app.Run();
     }
 }
