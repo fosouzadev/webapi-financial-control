@@ -1,12 +1,53 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FoSouzaDev.FinancialControl.Application.DataTransferObjects;
+using FoSouzaDev.FinancialControl.Application.Services.Interfaces;
+using FoSouzaDev.FinancialControl.WebApi.Responses;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FoSouzaDev.FinancialControl.WebApi.Controllers;
 
-public sealed class FinancialMovementCategoryController : ApplicationControllerBase
+[Route("api/v1/financial-movement-category")]
+public sealed class FinancialMovementCategoryController
+    (IFinancialMovementCategoryAppService appService) : ApplicationControllerBase
 {
-    [HttpGet]
-    public async Task<IResult> GetTestAsync()
+    [HttpPost]
+    [ProducesResponseType<ResponseData<Guid>>(StatusCodes.Status201Created)]
+    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status500InternalServerError)]
+    public async Task<IResult> AddAsync(AddOrUpdateFinancialMovementCategoryDto dto)
     {
-        return TypedResults.Ok(base.UserId);
+        Guid id = await appService.AddAsync(base.UserId, dto);
+        return TypedResults.Created($"api/v1/financial-movement-category/{id}", new ResponseData<Guid>(data: id));
+    }
+
+    [HttpGet("{id}")]
+    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status500InternalServerError)]
+    public async Task<IResult> GetByIdAsync([FromRoute] Guid id)
+    {
+        FinancialMovementCategoryDto dto = await appService.GetByIdAsync(base.UserId, id);
+        return TypedResults.Ok(new ResponseData<FinancialMovementCategoryDto>(dto));
+    }
+
+    [HttpPatch("{id}")]
+    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status500InternalServerError)]
+    public async Task<IResult> UpdateAsync([FromRoute] Guid id, [FromBody] JsonPatchDocument<AddOrUpdateFinancialMovementCategoryDto> pathDocument)
+    {
+        await appService.UpdateAsync(base.UserId, id, pathDocument);
+        return TypedResults.NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status500InternalServerError)]
+    public async Task<IResult> RemoveAsync([FromRoute] Guid id)
+    {
+        await appService.RemoveAsync(base.UserId, id);
+        return TypedResults.NoContent();
     }
 }

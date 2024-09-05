@@ -7,25 +7,25 @@ internal sealed class FinancialMovementCategoryRepository : IFinancialMovementCa
 {
     private readonly List<FinancialMovementCategory> _financialMovementCategories = new();
 
-    public async Task Add(FinancialMovementCategory category)
+    public async Task AddAsync(Guid userId, FinancialMovementCategory category)
     {
         _financialMovementCategories.Add(category);
     }
 
-    public async Task<FinancialMovementCategory> GetById(Guid id)
+    public async Task<FinancialMovementCategory> GetByIdAsync(Guid userId, Guid id)
     {
         return _financialMovementCategories.SingleOrDefault(c => c.Id == id);
     }
 
-    public async Task Update(FinancialMovementCategory category)
+    public async Task UpdateAsync(Guid userId, FinancialMovementCategory category)
     {
         _financialMovementCategories.Remove(category);
         _financialMovementCategories.Add(category);
     }
 
-    public async Task Delete(Guid id)
+    public async Task RemoveAsync(Guid userId, Guid id)
     {
-        FinancialMovementCategory category = await GetById(id);
+        FinancialMovementCategory category = await GetByIdAsync(userId, id);
         _financialMovementCategories.Remove(category);
     }
 }

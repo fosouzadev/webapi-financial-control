@@ -7,7 +7,7 @@ public sealed class FinancialMovementCategory
     private string _name;
 
     public Guid Id { get; private init; }
-    public string Name
+    public string Name // transformar em VO
     {
         get => _name;
         set

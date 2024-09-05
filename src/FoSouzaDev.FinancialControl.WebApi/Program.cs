@@ -1,3 +1,5 @@
+using FoSouzaDev.FinancialControl.Application.Services;
+using FoSouzaDev.FinancialControl.Application.Services.Interfaces;
 using FoSouzaDev.FinancialControl.Domain.Repositories;
 using FoSouzaDev.FinancialControl.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -12,6 +14,8 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.AddLogging(a => a.AddConsole());
+
         AddApplicationServices(builder.Services);
 
         builder.Services.AddRouting(options =>
@@ -23,8 +27,10 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
 
         AddSwagger(builder.Services);
-
         AddAuth(builder.Services, builder.Configuration);
+
+        builder.Services.AddExceptionHandler<ApplicationExceptionHandler>();
+        builder.Services.AddProblemDetails();
 
         WebApplication app = builder.Build();
 
@@ -38,6 +44,7 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllers();
+        app.UseExceptionHandler();
 
         app.Run();
     }
@@ -45,6 +52,8 @@ public class Program
     private static void AddApplicationServices(IServiceCollection services)
     {
         services.AddSingleton<IFinancialMovementCategoryRepository, FinancialMovementCategoryRepository>();
+
+        services.AddSingleton<IFinancialMovementCategoryAppService, FinancialMovementCategoryAppService>();
     }
 
     private static void AddSwagger(IServiceCollection services)

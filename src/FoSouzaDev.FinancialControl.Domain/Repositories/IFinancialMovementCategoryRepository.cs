@@ -4,8 +4,8 @@ namespace FoSouzaDev.FinancialControl.Domain.Repositories;
 
 public interface IFinancialMovementCategoryRepository
 {
-    Task Add(FinancialMovementCategory category);
-    Task<FinancialMovementCategory> GetById(Guid id);
-    Task Update(FinancialMovementCategory category);
-    Task Delete(Guid id);
+    Task AddAsync(Guid userId, FinancialMovementCategory category);
+    Task<FinancialMovementCategory> GetByIdAsync(Guid userId, Guid id);
+    Task UpdateAsync(Guid userId, FinancialMovementCategory category);
+    Task RemoveAsync(Guid userId, Guid id);
 }
