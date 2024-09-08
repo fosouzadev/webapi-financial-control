@@ -1,7 +1,8 @@
 using AutoFixture;
 using FluentAssertions;
+using FoSouzaDev.Common.Domain.Exceptions;
 using FoSouzaDev.FinancialControl.Domain.Entities;
-using FoSouzaDev.FinancialControl.Domain.Exceptions;
+using FoSouzaDev.FinancialControl.Domain.ValueObjects;
 
 namespace FoSouzaDev.FinancialControl.UnitaryTests.Domain;
 
@@ -14,7 +15,7 @@ public class FinancialMovementCategoryTest : BaseTest
     public void Constructor_InvalidName_ThrowException(string name)
     {
         // Act
-        Action act = () => _ = new FinancialMovementCategory(name);
+        Action act = () => _ = new FinancialMovementCategory(new Name(name));
 
         // Assert
         act.Should().ThrowExactly<ValidateException>()
@@ -25,7 +26,7 @@ public class FinancialMovementCategoryTest : BaseTest
     public void Constructor_ObjectReconstruction_CreateObject()
     {
         // Arrange
-        string name = base.Fixture.Create<string>();
+        Name name = base.Fixture.Create<Name>();
         Guid id = Guid.NewGuid();
 
         // Act
@@ -40,7 +41,7 @@ public class FinancialMovementCategoryTest : BaseTest
     public void Constructor_NewObject_CreateObject()
     {
         // Arrange
-        string name = base.Fixture.Create<string>();
+        Name name = base.Fixture.Create<Name>();
 
         // Act
         FinancialMovementCategory category = new(name);

@@ -1,4 +1,4 @@
-﻿using FoSouzaDev.FinancialControl.Domain.Exceptions;
+﻿using FoSouzaDev.Common.Domain.Exceptions;
 using FoSouzaDev.FinancialControl.WebApi.Responses;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.JsonPatch.Exceptions;

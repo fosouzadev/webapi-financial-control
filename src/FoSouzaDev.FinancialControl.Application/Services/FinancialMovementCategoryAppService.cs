@@ -1,8 +1,9 @@
-﻿using FoSouzaDev.FinancialControl.Application.DataTransferObjects;
+﻿using FoSouzaDev.Common.Domain.Exceptions;
+using FoSouzaDev.FinancialControl.Application.DataTransferObjects;
 using FoSouzaDev.FinancialControl.Application.Services.Interfaces;
 using FoSouzaDev.FinancialControl.Domain.Entities;
-using FoSouzaDev.FinancialControl.Domain.Exceptions;
 using FoSouzaDev.FinancialControl.Domain.Repositories;
+using FoSouzaDev.FinancialControl.Domain.ValueObjects;
 using Microsoft.AspNetCore.JsonPatch;
 
 namespace FoSouzaDev.FinancialControl.Application.Services;
@@ -31,7 +32,7 @@ internal sealed class FinancialMovementCategoryAppService
         AddOrUpdateFinancialMovementCategoryDto dto = (AddOrUpdateFinancialMovementCategoryDto)entity;
         pathDocument.ApplyTo(dto);
 
-        entity.Name = dto.Name;
+        entity.Name = new Name(dto.Name);
 
         await repository.UpdateAsync(userId, entity);
     }

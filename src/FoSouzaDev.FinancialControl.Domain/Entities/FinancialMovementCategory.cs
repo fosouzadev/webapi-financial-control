@@ -1,27 +1,9 @@
-﻿using FoSouzaDev.FinancialControl.Domain.Exceptions;
+﻿using FoSouzaDev.FinancialControl.Domain.ValueObjects;
 
 namespace FoSouzaDev.FinancialControl.Domain.Entities;
 
-public sealed class FinancialMovementCategory
+public sealed class FinancialMovementCategory(Name name, Guid? id = null)
 {
-    private string _name;
-
-    public Guid Id { get; private init; }
-    public string Name // transformar em VO
-    {
-        get => _name;
-        set
-        {
-            if (string.IsNullOrWhiteSpace(value))
-                throw new ValidateException($"{nameof(Name)} cannot be null or empty.");
-
-            _name = value;
-        }
-    }
-
-    public FinancialMovementCategory(string name, Guid? id = null)
-    {
-        Id = id ?? Guid.NewGuid();
-        Name = name;
-    }
+    public Guid Id { get; private init; } = id ?? Guid.NewGuid();
+    public Name Name { get; set; } = name;
 }
