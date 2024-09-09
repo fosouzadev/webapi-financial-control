@@ -2,6 +2,6 @@
 
 namespace FoSouzaDev.FinancialControl.Domain.Repositories;
 
-public interface IFinancialMovementCategoryRepository : IRepository<FinancialMovementCategory>
+public interface IBankAccountRepository : IRepository<BankAccount>
 {
 }

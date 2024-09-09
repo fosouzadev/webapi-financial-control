@@ -11,7 +11,7 @@ namespace FoSouzaDev.FinancialControl.Application.Services;
 internal sealed class FinancialMovementCategoryAppService
     (IFinancialMovementCategoryRepository repository) : IFinancialMovementCategoryAppService
 {
-    public async Task<Guid> AddAsync(Guid userId, AddOrUpdateFinancialMovementCategoryDto dto)
+    public async Task<Guid> AddAsync(Guid userId, AddFinancialMovementCategoryDto dto)
     {
         FinancialMovementCategory entity = (FinancialMovementCategory)dto;
         await repository.AddAsync(userId, entity);
@@ -25,11 +25,11 @@ internal sealed class FinancialMovementCategoryAppService
         return (FinancialMovementCategoryDto)entity;
     }
 
-    public async Task UpdateAsync(Guid userId, Guid id, JsonPatchDocument<AddOrUpdateFinancialMovementCategoryDto> pathDocument)
+    public async Task UpdateAsync(Guid userId, Guid id, JsonPatchDocument<UpdateFinancialMovementCategoryDto> pathDocument)
     {
         FinancialMovementCategory entity = await GetByIdOrThrowAsync(userId, id);
 
-        AddOrUpdateFinancialMovementCategoryDto dto = (AddOrUpdateFinancialMovementCategoryDto)entity;
+        UpdateFinancialMovementCategoryDto dto = (UpdateFinancialMovementCategoryDto)entity;
         pathDocument.ApplyTo(dto);
 
         entity.Name = new Name(dto.Name);

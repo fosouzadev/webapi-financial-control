@@ -14,7 +14,7 @@ public sealed class FinancialMovementCategoryController
     [ProducesResponseType<ResponseData<Guid>>(StatusCodes.Status201Created)]
     [ProducesResponseType<ResponseData<string>>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ResponseData<string>>(StatusCodes.Status500InternalServerError)]
-    public async Task<IResult> AddAsync(AddOrUpdateFinancialMovementCategoryDto dto)
+    public async Task<IResult> AddAsync(AddFinancialMovementCategoryDto dto)
     {
         Guid id = await appService.AddAsync(base.UserId, dto);
         return TypedResults.Created($"api/v1/financial-movement-category/{id}", new ResponseData<Guid>(data: id));
@@ -35,7 +35,7 @@ public sealed class FinancialMovementCategoryController
     [ProducesResponseType<ResponseData<string>>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ResponseData<string>>(StatusCodes.Status204NoContent)]
     [ProducesResponseType<ResponseData<string>>(StatusCodes.Status500InternalServerError)]
-    public async Task<IResult> UpdateAsync([FromRoute] Guid id, [FromBody] JsonPatchDocument<AddOrUpdateFinancialMovementCategoryDto> pathDocument)
+    public async Task<IResult> UpdateAsync([FromRoute] Guid id, [FromBody] JsonPatchDocument<UpdateFinancialMovementCategoryDto> pathDocument)
     {
         await appService.UpdateAsync(base.UserId, id, pathDocument);
         return TypedResults.NoContent();

@@ -13,12 +13,12 @@ internal static class FinancialMovementCategoryFactory
             Name = entity.Name.Value
         };
 
-    public static AddOrUpdateFinancialMovementCategoryDto DomainEntityToAddOrUpdateDto(FinancialMovementCategory entity) =>
+    public static UpdateFinancialMovementCategoryDto DomainEntityToUpdateDto(FinancialMovementCategory entity) =>
         new()
         {
             Name = entity.Name.Value
         };
 
-    public static FinancialMovementCategory AddOrUpdateDtoToDomainEntity(AddOrUpdateFinancialMovementCategoryDto dto) =>
+    public static FinancialMovementCategory AddDtoToDomainEntity(AddFinancialMovementCategoryDto dto) =>
         new(new Name(dto.Name));
 }
