@@ -1,5 +1,4 @@
-﻿using FoSouzaDev.FinancialControl.Application.Factories;
-using FoSouzaDev.FinancialControl.Domain.Entities;
+﻿using FoSouzaDev.FinancialControl.Domain.Entities;
 
 namespace FoSouzaDev.FinancialControl.Application.DataTransferObjects;
 
@@ -8,7 +7,4 @@ public sealed record AddBankAccountDto
     public required string Name { get; init; }
     public string Description { get; init; }
     public required BankAccountType Type { get; init; }
-
-    public static explicit operator BankAccount(AddBankAccountDto dto) =>
-        BankAccountFactory.AddDtoToDomainEntity(dto);
 }

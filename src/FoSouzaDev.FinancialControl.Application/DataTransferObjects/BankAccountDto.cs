@@ -1,5 +1,4 @@
-﻿using FoSouzaDev.FinancialControl.Application.Factories;
-using FoSouzaDev.FinancialControl.Domain.Entities;
+﻿using FoSouzaDev.FinancialControl.Domain.Entities;
 
 namespace FoSouzaDev.FinancialControl.Application.DataTransferObjects;
 
@@ -12,7 +11,4 @@ public sealed record BankAccountDto
     public required decimal Balance { get; init; }
     public required BankAccountType Type { get; init; }
     public required DateTimeOffset CreationDateTime { get; init; }
-
-    public static explicit operator BankAccountDto(BankAccount entity) =>
-        BankAccountFactory.DomainEntityToDto(entity);
 }

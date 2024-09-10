@@ -1,12 +1,13 @@
 ﻿using FoSouzaDev.FinancialControl.Application.DataTransferObjects;
+using FoSouzaDev.FinancialControl.Application.Factories.Interfaces;
 using FoSouzaDev.FinancialControl.Domain.Entities;
 using FoSouzaDev.FinancialControl.Domain.ValueObjects;
 
 namespace FoSouzaDev.FinancialControl.Application.Factories;
 
-internal static class BankAccountFactory
+internal class BankAccountFactory : IBankAccountFactory
 {
-    public static BankAccountDto DomainEntityToDto(BankAccount entity) =>
+    public BankAccountDto DomainEntityToDto(BankAccount entity) =>
         new()
         {
             Id = entity.Id,
@@ -18,7 +19,7 @@ internal static class BankAccountFactory
             CreationDateTime = entity.CreationDateTime
         };
 
-    public static UpdateBankAccount DomainEntityToUpdateDto(BankAccount entity) =>
+    public UpdateBankAccountDto DomainEntityToUpdateDto(BankAccount entity) =>
         new()
         {
             Name = entity.Name.Value,
@@ -26,6 +27,6 @@ internal static class BankAccountFactory
             IsActive = entity.IsActive
         };
 
-    public static BankAccount AddDtoToDomainEntity(AddBankAccountDto dto) =>
+    public BankAccount AddDtoToDomainEntity(AddBankAccountDto dto) =>
         new(new Name(dto.Name), dto.Description, isActive: true, dto.Type);
 }
