@@ -1,3 +1,5 @@
+using FoSouzaDev.FinancialControl.Application.Factories;
+using FoSouzaDev.FinancialControl.Application.Factories.Interfaces;
 using FoSouzaDev.FinancialControl.Application.Services;
 using FoSouzaDev.FinancialControl.Application.Services.Interfaces;
 using FoSouzaDev.FinancialControl.Domain.Repositories;
@@ -52,8 +54,13 @@ public class Program
     private static void AddApplicationServices(IServiceCollection services)
     {
         services.AddSingleton<IFinancialMovementCategoryRepository, FinancialMovementCategoryRepository>();
+        services.AddSingleton<IBankAccountRepository, BankAccountRepository>();
+
+        services.AddSingleton<IFinancialMovementCategoryFactory, FinancialMovementCategoryFactory>();
+        services.AddSingleton<IBankAccountFactory, BankAccountFactory>();
 
         services.AddSingleton<IFinancialMovementCategoryAppService, FinancialMovementCategoryAppService>();
+        services.AddSingleton<IBankAccountAppService, BankAccountAppService>();
     }
 
     private static void AddSwagger(IServiceCollection services)
@@ -101,7 +108,7 @@ public class Program
                 options.TokenValidationParameters.ClockSkew = new TimeSpan(0, 0, 5);
                 options.TokenValidationParameters.ValidateAudience = true;
                 options.TokenValidationParameters.ValidateIssuer = true;
-                options.TokenValidationParameters.ValidateLifetime = false;
+                options.TokenValidationParameters.ValidateLifetime = true;
             }, options => { configuration.Bind("AzureAd", options); });
 
         services.AddAuthorization(config =>
