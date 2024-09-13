@@ -1,4 +1,5 @@
-﻿using FoSouzaDev.FinancialControl.Domain.ValueObjects;
+﻿using FoSouzaDev.FinancialControl.Domain.Enums;
+using FoSouzaDev.FinancialControl.Domain.ValueObjects;
 
 namespace FoSouzaDev.FinancialControl.Domain.Entities;
 
@@ -7,16 +8,21 @@ public sealed class BankAccount(
     string description,
     bool isActive,
     BankAccountType type,
-    DateTimeOffset creationDateTime = default,
     decimal balance = 0,
-    Guid id = default) : Entity(id)
+    DateTimeOffset creationDateTime = default,
+    Guid id = default) : Entity(id, creationDateTime)
 {
+    private List<FinancialMovement> _financialMovements = new();
+
     public Name Name { get; set; } = name;
     public string Description { get; set; } = description;
     public bool IsActive { get; set; } = isActive;
     public decimal Balance { get; private set; } = balance;
     public BankAccountType Type { get; private init; } = type;
-    public DateTimeOffset CreationDateTime { get; private init; } = creationDateTime == default ? DateTimeOffset.UtcNow : creationDateTime;
 
-    // criar método para adicionar lançamento e atualizar saldo
+    public void AddFinancialMovement(
+        Name name, Amount amount, FinancialMovementType type, FinancialMovementCategory category)
+    {
+        _financialMovements.Add(new FinancialMovement(name, amount, type, category));
+    }
 }
