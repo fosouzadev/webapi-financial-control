@@ -3,6 +3,7 @@ using FoSouzaDev.FinancialControl.Domain.Entities;
 
 namespace FoSouzaDev.FinancialControl.Application.Services.Interfaces;
 
-public interface IBankAccountAppService : IAppService<BankAccount, BankAccountDto, UpdateBankAccountDto, AddBankAccountDto>
+public interface IBankAccountAppService : IAppServiceBase<BankAccount, BankAccountDto, UpdateBankAccountDto, AddBankAccountDto>
 {
+    Task<Guid> AddFinancialMovementAsync(Guid userId, Guid bankAccountId, AddFinancialMovementDto dto);
 }

@@ -9,7 +9,7 @@ namespace FoSouzaDev.FinancialControl.Application.Services;
 
 internal sealed class FinancialMovementCategoryAppService
     (IFinancialMovementCategoryFactory factory, IFinancialMovementCategoryRepository repository)
-    : AppService<FinancialMovementCategory, FinancialMovementCategoryDto, UpdateFinancialMovementCategoryDto, AddFinancialMovementCategoryDto>(factory, repository), IFinancialMovementCategoryAppService
+    : AppServiceBase<FinancialMovementCategory, FinancialMovementCategoryDto, UpdateFinancialMovementCategoryDto, AddFinancialMovementCategoryDto>(factory, repository), IFinancialMovementCategoryAppService
 {
     protected override void UpdateEntity(FinancialMovementCategory entity, UpdateFinancialMovementCategoryDto dto)
     {

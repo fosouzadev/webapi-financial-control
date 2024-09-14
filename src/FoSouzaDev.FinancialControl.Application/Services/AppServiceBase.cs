@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.JsonPatch;
 
 namespace FoSouzaDev.FinancialControl.Application.Services;
 
-public abstract class AppService<TEntity, TDto, TUpdateDto, TAddDto>
+public abstract class AppServiceBase<TEntity, TDto, TUpdateDto, TAddDto>
     (IAppFactory<TEntity, TDto, TUpdateDto, TAddDto> factory, IRepository<TEntity> repository)
-    : IAppService<TEntity, TDto, TUpdateDto, TAddDto>
+    : IAppServiceBase<TEntity, TDto, TUpdateDto, TAddDto>
     where TEntity : Entity
     where TDto : class
     where TUpdateDto : class
@@ -50,6 +50,6 @@ public abstract class AppService<TEntity, TDto, TUpdateDto, TAddDto>
 
     protected abstract void UpdateEntity(TEntity entity, TUpdateDto dto);
 
-    private async Task<TEntity> GetByIdOrThrowAsync(Guid userId, Guid id) =>
+    internal async Task<TEntity> GetByIdOrThrowAsync(Guid userId, Guid id) =>
         (await repository.GetByIdAsync(userId, id)) ?? throw new NotFoundException(id);
 }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.JsonPatch;
 
 namespace FoSouzaDev.FinancialControl.Application.Services.Interfaces;
 
-public interface IAppService<TEntity, TDto, TUpdateDto, TAddDto>
+public interface IAppServiceBase<TEntity, TDto, TUpdateDto, TAddDto>
     where TEntity : Entity
     where TDto : class
     where TUpdateDto : class

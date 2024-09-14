@@ -10,7 +10,7 @@ namespace FoSouzaDev.FinancialControl.WebApi.Controllers;
 [ApiController]
 [Authorize(Policy = "MicrosoftIdentityPolicy", Roles = "full,query")]
 public abstract class ApplicationControllerBase<TEntity, TDto, TUpdateDto, TAddDto>
-    (IAppService<TEntity, TDto, TUpdateDto, TAddDto> appService) : ControllerBase
+    (IAppServiceBase<TEntity, TDto, TUpdateDto, TAddDto> appService) : ControllerBase
     where TEntity : Entity
     where TDto : class
     where TUpdateDto : class

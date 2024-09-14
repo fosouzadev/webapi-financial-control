@@ -3,6 +3,6 @@ using FoSouzaDev.FinancialControl.Domain.Entities;
 
 namespace FoSouzaDev.FinancialControl.Application.Services.Interfaces;
 
-public interface IFinancialMovementCategoryAppService : IAppService<FinancialMovementCategory, FinancialMovementCategoryDto, UpdateFinancialMovementCategoryDto, AddFinancialMovementCategoryDto>
+public interface IFinancialMovementCategoryAppService : IAppServiceBase<FinancialMovementCategory, FinancialMovementCategoryDto, UpdateFinancialMovementCategoryDto, AddFinancialMovementCategoryDto>
 {
 }
