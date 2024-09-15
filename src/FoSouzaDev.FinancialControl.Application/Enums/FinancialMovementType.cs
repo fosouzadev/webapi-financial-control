@@ -1,4 +1,4 @@
-﻿namespace FoSouzaDev.FinancialControl.Domain.Enums;
+﻿namespace FoSouzaDev.FinancialControl.Application.Enums;
 
 public enum FinancialMovementType : byte
 {

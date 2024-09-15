@@ -4,8 +4,9 @@ namespace FoSouzaDev.FinancialControl.Domain.Repositories;
 
 public interface IRepository<T> where T : Entity
 {
-    Task AddAsync(Guid userId, T entity);
-    Task<T> GetByIdAsync(Guid userId, Guid id);
-    Task UpdateAsync(Guid userId, T entity);
-    Task RemoveAsync(Guid userId, Guid id);
+    Task AddAsync(T entity);
+    Task<T> GetByIdAsync(Guid id);
+    Task<T> GetByIdOrThrowAsync(Guid id);
+    Task UpdateAsync(T entity);
+    Task RemoveAsync(Guid id);
 }

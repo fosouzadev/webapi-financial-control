@@ -7,13 +7,13 @@ internal sealed class FinancialMovementCategoryRepository : IFinancialMovementCa
 {
     private readonly Dictionary<Guid, List<FinancialMovementCategory>> _financialMovementCategories = new();
 
-    public async Task AddAsync(Guid userId, FinancialMovementCategory entity)
+    public async Task AddAsync(FinancialMovementCategory entity)
     {
         if (_financialMovementCategories.TryGetValue(userId, out var financialMovementCategories))
             financialMovementCategories.Add(entity);
     }
 
-    public async Task<FinancialMovementCategory> GetByIdAsync(Guid userId, Guid id)
+    public async Task<FinancialMovementCategory> GetByIdAsync(Guid id)
     {
         if (_financialMovementCategories.TryGetValue(userId, out var financialMovementCategories))
             return financialMovementCategories.SingleOrDefault(a => a.Id == id);
@@ -21,7 +21,7 @@ internal sealed class FinancialMovementCategoryRepository : IFinancialMovementCa
         return null;
     }
 
-    public async Task UpdateAsync(Guid userId, FinancialMovementCategory entity)
+    public async Task UpdateAsync(FinancialMovementCategory entity)
     {
         if (_financialMovementCategories.TryGetValue(userId, out var financialMovementCategories))
         {
@@ -30,7 +30,7 @@ internal sealed class FinancialMovementCategoryRepository : IFinancialMovementCa
         }
     }
 
-    public async Task RemoveAsync(Guid userId, Guid id)
+    public async Task RemoveAsync(Guid id)
     {
         if (_financialMovementCategories.TryGetValue(userId, out var financialMovementCategories))
         {

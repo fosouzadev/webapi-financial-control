@@ -9,4 +9,8 @@
     <PackageReference Include="FoSouzaDev.Common.Domain" Version="1.1.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="FoSouzaDev.FinancialControl.WebApi" />
+  </ItemGroup>
+  
 </Project>

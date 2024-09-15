@@ -2,6 +2,8 @@ using FoSouzaDev.FinancialControl.Application.Factories;
 using FoSouzaDev.FinancialControl.Application.Factories.Interfaces;
 using FoSouzaDev.FinancialControl.Application.Services;
 using FoSouzaDev.FinancialControl.Application.Services.Interfaces;
+using FoSouzaDev.FinancialControl.Domain.Factories;
+using FoSouzaDev.FinancialControl.Domain.Factories.Interfaces;
 using FoSouzaDev.FinancialControl.Domain.Repositories;
 using FoSouzaDev.FinancialControl.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -53,14 +55,21 @@ public class Program
 
     private static void AddApplicationServices(IServiceCollection services)
     {
-        services.AddSingleton<IFinancialMovementCategoryRepository, FinancialMovementCategoryRepository>();
-        services.AddSingleton<IBankAccountRepository, BankAccountRepository>();
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-        services.AddSingleton<IFinancialMovementCategoryFactory, FinancialMovementCategoryFactory>();
-        services.AddSingleton<IBankAccountFactory, BankAccountFactory>();
+        // dependentes de IHttpContextAccessor devem ser scoped pelo contexto Http ser redefinido a cada requisição
+        // dessa forma, os outros serviços também precisam ser definidos como Scoped
+        services.AddScoped<IUserAppService, UserAppService>();
 
-        services.AddSingleton<IFinancialMovementCategoryAppService, FinancialMovementCategoryAppService>();
-        services.AddSingleton<IBankAccountAppService, BankAccountAppService>();
+        services.AddScoped<IFinancialMovementCategoryRepository, FinancialMovementCategoryRepository>();
+        services.AddScoped<IBankAccountRepository, BankAccountRepository>();
+
+        services.AddScoped<IFinancialMovementCategoryFactory, FinancialMovementCategoryFactory>();
+        services.AddScoped<IBankAccountFactory, BankAccountFactory>();
+        services.AddScoped<IFinancialMovementFactory, FinancialMovementFactory>();
+
+        services.AddScoped<IFinancialMovementCategoryAppService, FinancialMovementCategoryAppService>();
+        services.AddScoped<IBankAccountAppService, BankAccountAppService>();
     }
 
     private static void AddSwagger(IServiceCollection services)

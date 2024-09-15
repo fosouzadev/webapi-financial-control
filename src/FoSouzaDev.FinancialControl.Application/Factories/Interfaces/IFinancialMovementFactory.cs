@@ -3,6 +3,8 @@
 
 //namespace FoSouzaDev.FinancialControl.Application.Factories.Interfaces;
 
-//public interface IBankAccountFactory : IAppFactory<BankAccount, BankAccountDto, UpdateBankAccountDto, AddBankAccountDto>
+//public interface IFinancialMovementFactory : 
+//    IGetFactory<FinancialMovement, FinancialMovementDto>,
+//    IUpdateFactory<FinancialMovement, UpdateFinancialMovementDto>
 //{
 //}

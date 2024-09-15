@@ -4,8 +4,8 @@ namespace FoSouzaDev.FinancialControl.Domain.Entities;
 
 public sealed class FinancialMovementCategory(
     Name name,
-    DateTimeOffset creationDateTime = default,
-    Guid id = default) : Entity(id, creationDateTime)
+    DateTimeOffset creationDateTime,
+    Guid id) : Entity(id, creationDateTime)
 {
     public Name Name { get; set; } = name;
 }

@@ -7,7 +7,7 @@ internal sealed class BankAccountRepository : IBankAccountRepository
 {
     private readonly Dictionary<Guid, List<BankAccount>> _bankAccounts = new();
 
-    public async Task AddAsync(Guid userId, BankAccount entity)
+    public async Task AddAsync(BankAccount entity)
     {
         if (_bankAccounts.TryGetValue(userId, out var bankAccounts))
             bankAccounts.Add(entity);
@@ -15,7 +15,7 @@ internal sealed class BankAccountRepository : IBankAccountRepository
             _bankAccounts.Add(userId, new List<BankAccount> { entity });
     }
 
-    public async Task<BankAccount> GetByIdAsync(Guid userId, Guid id)
+    public async Task<BankAccount> GetByIdAsync(Guid id)
     {
         if (_bankAccounts.TryGetValue(userId, out var bankAccounts))
             return bankAccounts.SingleOrDefault(a => a.Id == id);
@@ -23,7 +23,7 @@ internal sealed class BankAccountRepository : IBankAccountRepository
         return null;
     }
 
-    public async Task UpdateAsync(Guid userId, BankAccount entity)
+    public async Task UpdateAsync(BankAccount entity)
     {
         if (_bankAccounts.TryGetValue(userId, out var bankAccounts))
         {
@@ -32,7 +32,7 @@ internal sealed class BankAccountRepository : IBankAccountRepository
         }
     }
 
-    public async Task RemoveAsync(Guid userId, Guid id)
+    public async Task RemoveAsync(Guid id)
     {
         if (_bankAccounts.TryGetValue(userId, out var bankAccounts))
         {

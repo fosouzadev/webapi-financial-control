@@ -8,11 +8,11 @@ public sealed class BankAccount(
     string description,
     bool isActive,
     BankAccountType type,
-    decimal balance = 0,
-    DateTimeOffset creationDateTime = default,
-    Guid id = default) : Entity(id, creationDateTime)
+    decimal balance,
+    DateTimeOffset creationDateTime,
+    Guid id) : Entity(id, creationDateTime)
 {
-    private List<FinancialMovement> _financialMovements = new();
+    //private List<FinancialMovement> _financialMovements = new();
 
     public Name Name { get; set; } = name;
     public string Description { get; set; } = description;
@@ -20,9 +20,15 @@ public sealed class BankAccount(
     public decimal Balance { get; private set; } = balance;
     public BankAccountType Type { get; private init; } = type;
 
-    public void AddFinancialMovement(
+    public Guid AddFinancialMovement(
         Name name, Amount amount, FinancialMovementType type, FinancialMovementCategory category)
     {
-        _financialMovements.Add(new FinancialMovement(name, amount, type, category));
+        //FinancialMovement financialMovement = new(name, amount, type, category);
+
+        //_financialMovements.Add(financialMovement);
+
+        //return financialMovement.Id;
+
+        return Guid.Empty;
     }
 }
