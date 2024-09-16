@@ -1,11 +1,11 @@
-using FoSouzaDev.FinancialControl.Application.Factories;
-using FoSouzaDev.FinancialControl.Application.Factories.Interfaces;
 using FoSouzaDev.FinancialControl.Application.Services;
 using FoSouzaDev.FinancialControl.Application.Services.Interfaces;
 using FoSouzaDev.FinancialControl.Domain.Factories;
 using FoSouzaDev.FinancialControl.Domain.Factories.Interfaces;
 using FoSouzaDev.FinancialControl.Domain.Repositories;
 using FoSouzaDev.FinancialControl.Infrastructure.Repositories;
+using FoSouzaDev.FinancialControl.Infrastructure.Services;
+using FoSouzaDev.FinancialControl.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
@@ -59,7 +59,7 @@ public class Program
 
         // dependentes de IHttpContextAccessor devem ser scoped pelo contexto Http ser redefinido a cada requisição
         // dessa forma, os outros serviços também precisam ser definidos como Scoped
-        services.AddScoped<IUserAppService, UserAppService>();
+        services.AddScoped<IUserService, UserService>();
 
         services.AddScoped<IFinancialMovementCategoryRepository, FinancialMovementCategoryRepository>();
         services.AddScoped<IBankAccountRepository, BankAccountRepository>();

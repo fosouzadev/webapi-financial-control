@@ -1,32 +1,79 @@
 ﻿using FoSouzaDev.FinancialControl.Application.DataTransferObjects;
-using FoSouzaDev.FinancialControl.Application.Factories.Interfaces;
 using FoSouzaDev.FinancialControl.Application.Services.Interfaces;
 using FoSouzaDev.FinancialControl.Domain.Entities;
+using FoSouzaDev.FinancialControl.Domain.Enums;
+using FoSouzaDev.FinancialControl.Domain.Factories.Interfaces;
 using FoSouzaDev.FinancialControl.Domain.Repositories;
 using FoSouzaDev.FinancialControl.Domain.ValueObjects;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace FoSouzaDev.FinancialControl.Application.Services;
 
 internal sealed class BankAccountAppService
-    (IBankAccountFactory factory, IBankAccountRepository repository, IFinancialMovementCategoryRepository categoryRepository)
-    : AppServiceBase<BankAccount, BankAccountDto, UpdateBankAccountDto, AddBankAccountDto>(factory, repository), IBankAccountAppService
+    (IBankAccountFactory factory,
+     IFinancialMovementFactory financialMovementFactory,
+     IBankAccountRepository repository,
+     IFinancialMovementCategoryRepository categoryRepository)
+    : IBankAccountAppService
 {
-    protected override void UpdateEntity(BankAccount entity, UpdateBankAccountDto dto)
+    public async Task<Guid> AddAsync(AddBankAccountDto dto)
     {
+        BankAccount entity = factory.CreateEntity(dto.Name, dto.Description, (BankAccountType)dto.Type);
+        await repository.AddAsync(entity);
+
+        return entity.Id;
+    }
+
+    public async Task<BankAccountDto> GetByIdAsync(Guid id)
+    {
+        BankAccount entity = await repository.GetByIdOrThrowAsync(id);
+        return new()
+        {
+            Id = entity.Id,
+            Name = entity.Name.Value,
+            Description = entity.Description,
+            Balance = entity.Balance,
+            IsActive = entity.IsActive,
+            Type = entity.Type,
+            CreationDateTime = entity.CreationDateTime
+        };
+    }
+
+    public async Task UpdateAsync(Guid id, JsonPatchDocument<UpdateBankAccountDto> pathDocument)
+    {
+        BankAccount entity = await repository.GetByIdOrThrowAsync(id);
+
+        UpdateBankAccountDto dto = new()
+        {
+            Name = entity.Name.Value,
+            Description = entity.Description,
+            IsActive = entity.IsActive
+        };
+        pathDocument.ApplyTo(dto);
+
         entity.Name = new Name(dto.Name);
         entity.Description = dto.Description;
         entity.IsActive = dto.IsActive;
+
+        await repository.UpdateAsync(entity);
     }
 
-    public async Task<Guid> AddFinancialMovementAsync(Guid userId, Guid bankAccountId, AddFinancialMovementDto dto)
+    public async Task RemoveAsync(Guid id)
     {
-        BankAccount bankAccount = await repository.GetByIdOrThrowAsync(userId, bankAccountId);
-        FinancialMovementCategory category = await categoryRepository.GetByIdOrThrowAsync(userId, dto.CategoryId);
+        _ = await repository.GetByIdOrThrowAsync(id);
 
-        bankAccount.AddFinancialMovement(
-            new Name(dto.Name),
-            new Amount(dto.Amount),
-            dto.Type,
-            category);
+        await repository.RemoveAsync(id);
+    }
+
+    public async Task<Guid> AddFinancialMovementAsync(Guid bankAccountId, AddFinancialMovementDto dto)
+    {
+        BankAccount bankAccount = await repository.GetByIdOrThrowAsync(bankAccountId);
+        FinancialMovementCategory category = await categoryRepository.GetByIdOrThrowAsync(dto.CategoryId);
+        FinancialMovement financialMovement = financialMovementFactory.CreateEntityAsync(
+            dto.Name, dto.Amount, (FinancialMovementType)dto.Type, category);
+
+        // pensar em como salvar
+
+        return financialMovement.Id;
     }
 }

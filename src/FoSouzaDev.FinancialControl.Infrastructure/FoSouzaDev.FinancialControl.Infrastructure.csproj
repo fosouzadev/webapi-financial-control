@@ -13,5 +13,9 @@
   <ItemGroup>
     <InternalsVisibleTo Include="FoSouzaDev.FinancialControl.WebApi" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.1.1" />
+  </ItemGroup>
   
 </Project>

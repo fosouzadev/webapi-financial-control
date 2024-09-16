@@ -1,9 +1,13 @@
 ﻿using FoSouzaDev.FinancialControl.Application.DataTransferObjects;
-using FoSouzaDev.FinancialControl.Domain.Entities;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace FoSouzaDev.FinancialControl.Application.Services.Interfaces;
 
-public interface IBankAccountAppService : IAppServiceBase<BankAccount, BankAccountDto, UpdateBankAccountDto, AddBankAccountDto>
+public interface IBankAccountAppService
 {
-    Task<Guid> AddFinancialMovementAsync(Guid userId, Guid bankAccountId, AddFinancialMovementDto dto);
+    Task<Guid> AddAsync(AddBankAccountDto dto);
+    Task<BankAccountDto> GetByIdAsync(Guid id);
+    Task UpdateAsync(Guid id, JsonPatchDocument<UpdateBankAccountDto> pathDocument);
+    Task RemoveAsync(Guid id);
+    Task<Guid> AddFinancialMovementAsync(Guid bankAccountId, AddFinancialMovementDto dto);
 }

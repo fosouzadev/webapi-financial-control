@@ -4,18 +4,15 @@ using FoSouzaDev.FinancialControl.Domain.Entities;
 using FoSouzaDev.FinancialControl.Domain.Factories.Interfaces;
 using FoSouzaDev.FinancialControl.Domain.Repositories;
 using FoSouzaDev.FinancialControl.Domain.ValueObjects;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.JsonPatch;
 
 namespace FoSouzaDev.FinancialControl.Application.Services;
 
 internal sealed class FinancialMovementCategoryAppService
-    (IFinancialMovementCategoryFactory factory,
-     IFinancialMovementCategoryRepository repository,
-     IUserAppService userAppService)
+    (IFinancialMovementCategoryFactory factory, IFinancialMovementCategoryRepository repository)
     : IFinancialMovementCategoryAppService
 {
-    public async Task<Guid> AddAsync(FinancialMovementCategoryDto dto)
+    public async Task<Guid> AddAsync(AddFinancialMovementCategoryDto dto)
     {
         FinancialMovementCategory entity = factory.CreateEntity(dto.Name);
         await repository.AddAsync(entity);
@@ -23,41 +20,32 @@ internal sealed class FinancialMovementCategoryAppService
         return entity.Id;
     }
 
-    public async Task<Guid> AddAsync(Guid userId, TAddDto dto)
+    public async Task<FinancialMovementCategoryDto> GetByIdAsync(Guid id)
     {
-        TEntity entity = factory.AddDtoToDomainEntity(dto);
-        await repository.AddAsync(userId, entity);
-
-        return entity.Id;
+        FinancialMovementCategory entity = await repository.GetByIdOrThrowAsync(id);
+        return new()
+        {
+            Id = entity.Id,
+            Name = entity.Name.Value
+        };
     }
 
-    public async Task<TDto> GetByIdAsync(Guid userId, Guid id)
+    public async Task UpdateAsync(Guid id, JsonPatchDocument<UpdateFinancialMovementCategoryDto> pathDocument)
     {
-        TEntity entity = await repository.GetByIdOrThrowAsync(userId, id);
-        return factory.DomainEntityToDto(entity);
-    }
+        FinancialMovementCategory entity = await repository.GetByIdOrThrowAsync(id);
 
-    public async Task UpdateAsync(Guid userId, Guid id, JsonPatchDocument<TUpdateDto> pathDocument)
-    {
-        TEntity entity = await repository.GetByIdOrThrowAsync(userId, id);
-
-        TUpdateDto dto = factory.DomainEntityToUpdateDto(entity);
+        UpdateFinancialMovementCategoryDto dto = new() { Name = entity.Name.Value };
         pathDocument.ApplyTo(dto);
 
-        UpdateEntity(entity, dto);
-
-        await repository.UpdateAsync(userId, entity);
-    }
-
-    public async Task RemoveAsync(Guid userId, Guid id)
-    {
-        _ = await repository.GetByIdOrThrowAsync(userId, id);
-
-        await repository.RemoveAsync(userId, id);
-    }
-
-    protected override void UpdateEntity(FinancialMovementCategory entity, UpdateFinancialMovementCategoryDto dto)
-    {
         entity.Name = new Name(dto.Name);
+
+        await repository.UpdateAsync(entity);
+    }
+
+    public async Task RemoveAsync(Guid id)
+    {
+        _ = await repository.GetByIdOrThrowAsync(id);
+
+        await repository.RemoveAsync(id);
     }
 }

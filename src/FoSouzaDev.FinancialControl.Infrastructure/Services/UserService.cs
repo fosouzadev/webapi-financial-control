@@ -1,6 +1,9 @@
-﻿namespace FoSouzaDev.FinancialControl.Infrastructure.Services;
+﻿using FoSouzaDev.FinancialControl.Infrastructure.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 
-internal class UserService(IHttpContextAccessor httpContextAccessor) : IUserAppService
+namespace FoSouzaDev.FinancialControl.Infrastructure.Services;
+
+internal class UserService(IHttpContextAccessor httpContextAccessor) : IUserService
 {
     private const string ObjectIdentifier = "http://schemas.microsoft.com/identity/claims/objectidentifier";
 

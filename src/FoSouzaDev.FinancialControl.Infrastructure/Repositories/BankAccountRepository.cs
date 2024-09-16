@@ -1,31 +1,43 @@
-﻿using FoSouzaDev.FinancialControl.Domain.Entities;
+﻿using FoSouzaDev.Common.Domain.Exceptions;
+using FoSouzaDev.FinancialControl.Domain.Entities;
 using FoSouzaDev.FinancialControl.Domain.Repositories;
+using FoSouzaDev.FinancialControl.Infrastructure.Services.Interfaces;
 
 namespace FoSouzaDev.FinancialControl.Infrastructure.Repositories;
 
-internal sealed class BankAccountRepository : IBankAccountRepository
+internal sealed class BankAccountRepository(IUserService service) : IBankAccountRepository
 {
     private readonly Dictionary<Guid, List<BankAccount>> _bankAccounts = new();
 
     public async Task AddAsync(BankAccount entity)
     {
-        if (_bankAccounts.TryGetValue(userId, out var bankAccounts))
+        if (_bankAccounts.TryGetValue(service.GetUserId(), out var bankAccounts))
             bankAccounts.Add(entity);
         else
-            _bankAccounts.Add(userId, new List<BankAccount> { entity });
+            _bankAccounts.Add(service.GetUserId(), new List<BankAccount> { entity });
     }
 
     public async Task<BankAccount> GetByIdAsync(Guid id)
     {
-        if (_bankAccounts.TryGetValue(userId, out var bankAccounts))
+        if (_bankAccounts.TryGetValue(service.GetUserId(), out var bankAccounts))
             return bankAccounts.SingleOrDefault(a => a.Id == id);
 
         return null;
     }
 
+    public async Task<BankAccount> GetByIdOrThrowAsync(Guid id)
+    {
+        var entity = await GetByIdAsync(id);
+
+        if (entity == null)
+            throw new NotFoundException(id);
+
+        return entity;
+    }
+
     public async Task UpdateAsync(BankAccount entity)
     {
-        if (_bankAccounts.TryGetValue(userId, out var bankAccounts))
+        if (_bankAccounts.TryGetValue(service.GetUserId(), out var bankAccounts))
         {
             bankAccounts.Remove(entity);
             bankAccounts.Add(entity);
@@ -34,7 +46,7 @@ internal sealed class BankAccountRepository : IBankAccountRepository
 
     public async Task RemoveAsync(Guid id)
     {
-        if (_bankAccounts.TryGetValue(userId, out var bankAccounts))
+        if (_bankAccounts.TryGetValue(service.GetUserId(), out var bankAccounts))
         {
             BankAccount entity = bankAccounts.Single(a => a.Id == id);
             bankAccounts.Remove(entity);
