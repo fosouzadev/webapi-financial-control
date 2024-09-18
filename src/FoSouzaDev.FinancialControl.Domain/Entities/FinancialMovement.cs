@@ -8,6 +8,7 @@ public sealed class FinancialMovement(
     Amount amount,
     FinancialMovementType type,
     FinancialMovementCategory category,
+    BankAccount bankAccount,
     DateTimeOffset creationDateTime,
     Guid id) : Entity(id, creationDateTime)
 {
@@ -15,4 +16,5 @@ public sealed class FinancialMovement(
     public Amount Amount { get; set; } = amount;
     public FinancialMovementType Type { get; private set; } = type;
     public FinancialMovementCategory Category { get; set; } = category;
+    public BankAccount BankAccount { get; private set; } = bankAccount;
 }

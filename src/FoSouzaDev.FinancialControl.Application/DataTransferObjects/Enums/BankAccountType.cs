@@ -1,4 +1,4 @@
-﻿namespace FoSouzaDev.FinancialControl.Application.Enums;
+﻿namespace FoSouzaDev.FinancialControl.Application.DataTransferObjects.Enums;
 
 public enum BankAccountType : byte
 {

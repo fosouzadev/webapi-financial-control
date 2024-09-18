@@ -1,4 +1,4 @@
-﻿using FoSouzaDev.FinancialControl.Application.Enums;
+﻿using FoSouzaDev.FinancialControl.Application.DataTransferObjects.Enums;
 
 namespace FoSouzaDev.FinancialControl.Application.DataTransferObjects;
 

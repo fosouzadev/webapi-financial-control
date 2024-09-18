@@ -62,6 +62,7 @@ public class Program
         services.AddScoped<IUserService, UserService>();
 
         services.AddScoped<IFinancialMovementCategoryRepository, FinancialMovementCategoryRepository>();
+        services.AddScoped<IFinancialMovementRepository, FinancialMovementRepository>();
         services.AddScoped<IBankAccountRepository, BankAccountRepository>();
 
         services.AddScoped<IFinancialMovementCategoryFactory, FinancialMovementCategoryFactory>();
@@ -69,6 +70,7 @@ public class Program
         services.AddScoped<IFinancialMovementFactory, FinancialMovementFactory>();
 
         services.AddScoped<IFinancialMovementCategoryAppService, FinancialMovementCategoryAppService>();
+        services.AddScoped<IFinancialMovementAppService, FinancialMovementAppService>();
         services.AddScoped<IBankAccountAppService, BankAccountAppService>();
     }
 

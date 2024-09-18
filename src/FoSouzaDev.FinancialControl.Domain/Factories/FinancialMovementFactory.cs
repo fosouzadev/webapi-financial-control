@@ -7,10 +7,11 @@ namespace FoSouzaDev.FinancialControl.Domain.Factories;
 
 internal sealed class FinancialMovementFactory : IFinancialMovementFactory
 {
-    public FinancialMovement CreateEntityAsync(string name, decimal amount, FinancialMovementType type, FinancialMovementCategory category) =>
-        new(new Name(name), new Amount(amount), type, category, DateTimeOffset.UtcNow, Guid.NewGuid());
+    public FinancialMovement CreateEntityAsync(
+        string name, decimal amount, FinancialMovementType type, FinancialMovementCategory category, BankAccount bankAccount) =>
+        new(new Name(name), new Amount(amount), type, category, bankAccount, DateTimeOffset.UtcNow, Guid.NewGuid());
 
     public FinancialMovement RebuildEntity(
-        string name, decimal amount, FinancialMovementType type, FinancialMovementCategory category, DateTimeOffset creationDateTime, Guid id) =>
-        new(new Name(name), new Amount(amount), type, category, creationDateTime, id);
+        string name, decimal amount, FinancialMovementType type, FinancialMovementCategory category, BankAccount bankAccount, DateTimeOffset creationDateTime, Guid id) =>
+        new(new Name(name), new Amount(amount), type, category, bankAccount, creationDateTime, id);
 }

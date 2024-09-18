@@ -52,4 +52,19 @@ internal sealed class BankAccountRepository(IUserService service) : IBankAccount
             bankAccounts.Remove(entity);
         }
     }
+
+    public async Task AddFinancialMovementAsync(FinancialMovement financialMovement)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<FinancialMovement> GetFinancialMovementByIdOrThrowAsync(Guid bankAccountId, Guid financialMovementId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task UpdateFinancialMovementAsync(FinancialMovement financialMovement)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -1,7 +1,6 @@
 ﻿using FoSouzaDev.FinancialControl.Application.DataTransferObjects;
 using FoSouzaDev.FinancialControl.Application.Services.Interfaces;
 using FoSouzaDev.FinancialControl.Domain.Entities;
-using FoSouzaDev.FinancialControl.Domain.Enums;
 using FoSouzaDev.FinancialControl.Domain.Factories.Interfaces;
 using FoSouzaDev.FinancialControl.Domain.Repositories;
 using FoSouzaDev.FinancialControl.Domain.ValueObjects;
@@ -11,14 +10,12 @@ namespace FoSouzaDev.FinancialControl.Application.Services;
 
 internal sealed class BankAccountAppService
     (IBankAccountFactory factory,
-     IFinancialMovementFactory financialMovementFactory,
-     IBankAccountRepository repository,
-     IFinancialMovementCategoryRepository categoryRepository)
+     IBankAccountRepository repository)
     : IBankAccountAppService
 {
     public async Task<Guid> AddAsync(AddBankAccountDto dto)
     {
-        BankAccount entity = factory.CreateEntity(dto.Name, dto.Description, (BankAccountType)dto.Type);
+        BankAccount entity = factory.CreateEntity(dto.Name, dto.Description, (Domain.Enums.BankAccountType)dto.Type);
         await repository.AddAsync(entity);
 
         return entity.Id;
@@ -27,6 +24,7 @@ internal sealed class BankAccountAppService
     public async Task<BankAccountDto> GetByIdAsync(Guid id)
     {
         BankAccount entity = await repository.GetByIdOrThrowAsync(id);
+
         return new()
         {
             Id = entity.Id,
@@ -63,17 +61,5 @@ internal sealed class BankAccountAppService
         _ = await repository.GetByIdOrThrowAsync(id);
 
         await repository.RemoveAsync(id);
-    }
-
-    public async Task<Guid> AddFinancialMovementAsync(Guid bankAccountId, AddFinancialMovementDto dto)
-    {
-        BankAccount bankAccount = await repository.GetByIdOrThrowAsync(bankAccountId);
-        FinancialMovementCategory category = await categoryRepository.GetByIdOrThrowAsync(dto.CategoryId);
-        FinancialMovement financialMovement = financialMovementFactory.CreateEntityAsync(
-            dto.Name, dto.Amount, (FinancialMovementType)dto.Type, category);
-
-        // pensar em como salvar
-
-        return financialMovement.Id;
     }
 }

@@ -9,5 +9,4 @@ public interface IBankAccountAppService
     Task<BankAccountDto> GetByIdAsync(Guid id);
     Task UpdateAsync(Guid id, JsonPatchDocument<UpdateBankAccountDto> pathDocument);
     Task RemoveAsync(Guid id);
-    Task<Guid> AddFinancialMovementAsync(Guid bankAccountId, AddFinancialMovementDto dto);
 }
