@@ -1,5 +1,5 @@
-﻿using FoSouzaDev.FinancialControl.Domain.Entities;
-using FoSouzaDev.FinancialControl.Domain.Repositories.Generics;
+﻿using FoSouzaDev.Common.Domain.Repositories;
+using FoSouzaDev.FinancialControl.Domain.Entities;
 
 namespace FoSouzaDev.FinancialControl.Domain.Repositories;
 

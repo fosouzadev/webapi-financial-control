@@ -1,4 +1,5 @@
-﻿using FoSouzaDev.FinancialControl.Domain.ValueObjects;
+﻿using FoSouzaDev.Common.Domain.Entities;
+using FoSouzaDev.FinancialControl.Domain.ValueObjects;
 
 namespace FoSouzaDev.FinancialControl.Domain.Entities;
 

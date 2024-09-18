@@ -21,19 +21,19 @@ public sealed class FinancialMovementCategoryController(IFinancialMovementCatego
     }
 
     [HttpGet("{id}")]
-    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ResponseData<Guid>>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ResponseData<GetFinancialMovementCategoryDto>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ResponseData<string>>(StatusCodes.Status500InternalServerError)]
     public async Task<IResult> GetByIdAsync([FromRoute] Guid id)
     {
-        FinancialMovementCategoryDto dto = await appService.GetByIdAsync(id);
-        return TypedResults.Ok(new ResponseData<FinancialMovementCategoryDto>(dto));
+        GetFinancialMovementCategoryDto dto = await appService.GetByIdAsync(id);
+        return TypedResults.Ok(new ResponseData<GetFinancialMovementCategoryDto>(dto));
     }
 
     [HttpPatch("{id}")]
     [ProducesResponseType<ResponseData<string>>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ResponseData<Guid>>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType<ResponseData<string>>(StatusCodes.Status500InternalServerError)]
     public async Task<IResult> UpdateAsync([FromRoute] Guid id, [FromBody] JsonPatchDocument<UpdateFinancialMovementCategoryDto> pathDocument)
     {
@@ -42,8 +42,8 @@ public sealed class FinancialMovementCategoryController(IFinancialMovementCatego
     }
 
     [HttpDelete("{id}")]
-    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ResponseData<Guid>>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType<ResponseData<string>>(StatusCodes.Status500InternalServerError)]
     public async Task<IResult> RemoveAsync([FromRoute] Guid id)
     {

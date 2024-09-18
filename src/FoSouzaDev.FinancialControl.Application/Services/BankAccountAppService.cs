@@ -21,7 +21,7 @@ internal sealed class BankAccountAppService
         return entity.Id;
     }
 
-    public async Task<BankAccountDto> GetByIdAsync(Guid id)
+    public async Task<GetBankAccountDto> GetByIdAsync(Guid id)
     {
         BankAccount entity = await repository.GetByIdOrThrowAsync(id);
 

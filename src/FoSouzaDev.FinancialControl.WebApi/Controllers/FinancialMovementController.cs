@@ -20,18 +20,18 @@ public class FinancialMovementController(IFinancialMovementAppService appService
     }
 
     [HttpGet("{id}")]
-    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ResponseData<Guid>>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ResponseData<GetFinancialMovementDto>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ResponseData<string>>(StatusCodes.Status500InternalServerError)]
     public async Task<IResult> GetByIdAsync([FromRoute] Guid id)
     {
-        FinancialMovementDto dto = await appService.GetByIdAsync(id);
-        return TypedResults.Ok(new ResponseData<FinancialMovementDto>(dto));
+        GetFinancialMovementDto dto = await appService.GetByIdAsync(id);
+        return TypedResults.Ok(new ResponseData<GetFinancialMovementDto>(dto));
     }
 
     [HttpPatch("{id}")]
     [ProducesResponseType<ResponseData<string>>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ResponseData<Guid>>(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType<ResponseData<string>>(StatusCodes.Status500InternalServerError)]
     public async Task<IResult> UpdateAsync([FromRoute] Guid id, [FromBody] JsonPatchDocument<UpdateFinancialMovementDto> pathDocument)

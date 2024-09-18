@@ -9,6 +9,7 @@ using FoSouzaDev.FinancialControl.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Converters;
 
 namespace FoSouzaDev.FinancialControl.WebApi;
 
@@ -27,7 +28,8 @@ public class Program
             options.LowercaseUrls = true;
             options.LowercaseQueryStrings = true;
         });
-        builder.Services.AddControllers().AddNewtonsoftJson();
+        builder.Services.AddControllers().AddNewtonsoftJson(options =>
+            options.SerializerSettings.Converters.Add(new StringEnumConverter()));
         builder.Services.AddEndpointsApiExplorer();
 
         AddSwagger(builder.Services);
@@ -78,6 +80,9 @@ public class Program
     {
         services.AddSwaggerGen(c =>
         {
+            c.SchemaFilter<EnumSchemaFilter>();
+            //c.AddNewtonsoftJson();
+
             OpenApiSecurityScheme securityScheme = new()
             {
                 Name = "Authorization",

@@ -1,4 +1,5 @@
 ﻿using FoSouzaDev.FinancialControl.Application.DataTransferObjects;
+using FoSouzaDev.FinancialControl.Application.Enums;
 using FoSouzaDev.FinancialControl.Application.Services.Interfaces;
 using FoSouzaDev.FinancialControl.Domain.Entities;
 using FoSouzaDev.FinancialControl.Domain.Factories.Interfaces;
@@ -28,7 +29,7 @@ internal sealed class FinancialMovementAppService
         return financialMovement.Id;
     }
 
-    public async Task<FinancialMovementDto> GetByIdAsync(Guid financialMovementId)
+    public async Task<GetFinancialMovementDto> GetByIdAsync(Guid financialMovementId)
     {
         FinancialMovement financialMovement = await repository.GetByIdOrThrowAsync(financialMovementId);
         
@@ -37,7 +38,7 @@ internal sealed class FinancialMovementAppService
             Id = financialMovement.Id,
             Name = financialMovement.Name.Value,
             Amount = financialMovement.Amount.Value,
-            Type = (DataTransferObjects.Enums.FinancialMovementType)financialMovement.Type,
+            Type = (FinancialMovementTypeEnum)financialMovement.Type,
             CategoryId = financialMovement.Category.Id,
             BankAccountId = financialMovement.BankAccount.Id,
             CreationDateTime = financialMovement.CreationDateTime
