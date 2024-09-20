@@ -17,4 +17,8 @@
     <ProjectReference Include="..\FoSouzaDev.FinancialControl.Infrastructure\FoSouzaDev.FinancialControl.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="FoSouzaDev.FinancialControl.UnitaryTests" />
+  </ItemGroup>
+
 </Project>
