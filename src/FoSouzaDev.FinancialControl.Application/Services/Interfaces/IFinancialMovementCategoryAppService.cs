@@ -5,8 +5,8 @@ namespace FoSouzaDev.FinancialControl.Application.Services.Interfaces;
 
 public interface IFinancialMovementCategoryAppService
 {
-    Task<Guid> AddAsync(AddFinancialMovementCategoryDto dto);
-    Task<GetFinancialMovementCategoryDto> GetByIdAsync(Guid id);
+    Guid Add(AddFinancialMovementCategoryDto dto);
+    GetFinancialMovementCategoryDto GetById(Guid id);
     Task UpdateAsync(Guid id, JsonPatchDocument<UpdateFinancialMovementCategoryDto> pathDocument);
     Task RemoveAsync(Guid id);
 }

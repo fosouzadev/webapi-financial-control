@@ -4,12 +4,16 @@ using FoSouzaDev.FinancialControl.Domain.Factories;
 using FoSouzaDev.FinancialControl.Domain.Factories.Interfaces;
 using FoSouzaDev.FinancialControl.Domain.Repositories;
 using FoSouzaDev.FinancialControl.Infrastructure.Repositories;
+using FoSouzaDev.FinancialControl.Infrastructure.Repositories.MongoDatabase;
 using FoSouzaDev.FinancialControl.Infrastructure.Services;
 using FoSouzaDev.FinancialControl.Infrastructure.Services.Interfaces;
 using FoSouzaDev.FinancialControl.WebApi.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
+using MongoDB.Driver;
 using Newtonsoft.Json.Converters;
 
 namespace FoSouzaDev.FinancialControl.WebApi;
@@ -22,7 +26,7 @@ public class Program
 
         builder.Services.AddLogging(a => a.AddConsole());
 
-        AddApplicationServices(builder.Services);
+        AddApplicationServices(builder.Services, builder.Configuration);
 
         builder.Services.AddRouting(options =>
         {
@@ -56,10 +60,22 @@ public class Program
         app.Run();
     }
 
-    private static void AddApplicationServices(IServiceCollection services)
+    private static void AddApplicationServices(IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddSingleton<IHttpResponseWriter, HttpResponseWriter>();
+
+        services.Configure<MongoDbSettings>(configuration.GetSection(nameof(MongoDbSettings)));
+        services.AddDbContext<MongoDbContext>(
+            (provider, options) =>
+            {
+                MongoDbSettings mongoDbSettings = provider.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+                IMongoClient mongoClient = new MongoClient(mongoDbSettings.ConnectionUri);
+
+                options.UseMongoDB(mongoClient, mongoDbSettings.DatabaseName);
+            },
+            contextLifetime: ServiceLifetime.Singleton,
+            optionsLifetime: ServiceLifetime.Singleton);
 
         // dependentes de IHttpContextAccessor devem ser scoped pelo contexto Http ser redefinido a cada requisição
         // dessa forma, os outros serviços também precisam ser definidos como Scoped
@@ -125,7 +141,7 @@ public class Program
                 options.TokenValidationParameters.ClockSkew = new TimeSpan(0, 0, 5);
                 options.TokenValidationParameters.ValidateAudience = true;
                 options.TokenValidationParameters.ValidateIssuer = true;
-                options.TokenValidationParameters.ValidateLifetime = true;
+                options.TokenValidationParameters.ValidateLifetime = false;
             }, options => { configuration.Bind("AzureAd", options); });
 
         services.AddAuthorization(config =>
