@@ -2,7 +2,7 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace FoSouzaDev.FinancialControl.WebApi;
+namespace FoSouzaDev.FinancialControl.WebApi.Settings;
 
 internal class EnumSchemaFilter : ISchemaFilter
 {

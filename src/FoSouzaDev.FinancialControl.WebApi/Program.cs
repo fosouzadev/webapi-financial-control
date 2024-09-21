@@ -6,6 +6,7 @@ using FoSouzaDev.FinancialControl.Domain.Repositories;
 using FoSouzaDev.FinancialControl.Infrastructure.Repositories;
 using FoSouzaDev.FinancialControl.Infrastructure.Services;
 using FoSouzaDev.FinancialControl.Infrastructure.Services.Interfaces;
+using FoSouzaDev.FinancialControl.WebApi.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
@@ -58,6 +59,7 @@ public class Program
     private static void AddApplicationServices(IServiceCollection services)
     {
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.AddSingleton<IHttpResponseWriter, HttpResponseWriter>();
 
         // dependentes de IHttpContextAccessor devem ser scoped pelo contexto Http ser redefinido a cada requisição
         // dessa forma, os outros serviços também precisam ser definidos como Scoped
@@ -81,7 +83,6 @@ public class Program
         services.AddSwaggerGen(c =>
         {
             c.SchemaFilter<EnumSchemaFilter>();
-            //c.AddNewtonsoftJson();
 
             OpenApiSecurityScheme securityScheme = new()
             {
