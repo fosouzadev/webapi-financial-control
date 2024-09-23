@@ -12,17 +12,17 @@ internal sealed class FinancialMovementCategoryAppService
     (IFinancialMovementCategoryFactory factory, IFinancialMovementCategoryRepository repository)
     : IFinancialMovementCategoryAppService
 {
-    public Guid Add(AddFinancialMovementCategoryDto dto)
+    public async Task<Guid> AddAsync(AddFinancialMovementCategoryDto dto)
     {
         FinancialMovementCategory entity = factory.CreateEntity(dto.Name);
-        repository.Add(entity);
+        await repository.AddAsync(entity);
 
         return entity.Id;
     }
 
-    public GetFinancialMovementCategoryDto GetById(Guid id)
+    public async Task<GetFinancialMovementCategoryDto> GetByIdAsync(Guid id)
     {
-        FinancialMovementCategory entity = repository.GetByIdOrThrow(id);
+        FinancialMovementCategory entity = await repository.GetByIdOrThrowAsync(id);
         return new()
         {
             Id = entity.Id,
@@ -33,7 +33,7 @@ internal sealed class FinancialMovementCategoryAppService
 
     public async Task UpdateAsync(Guid id, JsonPatchDocument<UpdateFinancialMovementCategoryDto> pathDocument)
     {
-        FinancialMovementCategory entity = repository.GetByIdOrThrow(id);
+        FinancialMovementCategory entity = await repository.GetByIdOrThrowAsync(id);
 
         UpdateFinancialMovementCategoryDto dto = new() { Name = entity.Name.Value };
         pathDocument.ApplyTo(dto);
@@ -45,7 +45,7 @@ internal sealed class FinancialMovementCategoryAppService
 
     public async Task RemoveAsync(Guid id)
     {
-        _ = repository.GetByIdOrThrow(id);
+        _ = repository.GetByIdOrThrowAsync(id);
 
         await repository.RemoveAsync(id);
     }

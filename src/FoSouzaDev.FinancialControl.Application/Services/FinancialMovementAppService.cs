@@ -19,7 +19,7 @@ internal sealed class FinancialMovementAppService
     public async Task<Guid> AddAsync(AddFinancialMovementDto dto)
     {
         BankAccount bankAccount = await bankRepository.GetByIdOrThrowAsync(dto.BankAccountId);
-        FinancialMovementCategory category = categoryRepository.GetByIdOrThrow(dto.CategoryId);
+        FinancialMovementCategory category = await categoryRepository.GetByIdOrThrowAsync(dto.CategoryId);
 
         FinancialMovement financialMovement = factory.CreateEntityAsync(
             dto.Name, dto.Amount, (Domain.Enums.FinancialMovementType)dto.Type, category, bankAccount);
@@ -57,7 +57,7 @@ internal sealed class FinancialMovementAppService
         };
         pathDocument.ApplyTo(dto);
 
-        FinancialMovementCategory category = categoryRepository.GetByIdOrThrow(dto.CategoryId);
+        FinancialMovementCategory category = await categoryRepository.GetByIdOrThrowAsync(dto.CategoryId);
 
         entity.Name = new Name(dto.Name);
         entity.Amount = new Amount(dto.Amount);

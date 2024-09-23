@@ -5,6 +5,7 @@ using FoSouzaDev.FinancialControl.Domain.ValueObjects;
 using FoSouzaDev.FinancialControl.Infrastructure.DataEntities;
 using FoSouzaDev.FinancialControl.Infrastructure.Repositories.MongoDatabase;
 using FoSouzaDev.FinancialControl.Infrastructure.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace FoSouzaDev.FinancialControl.Infrastructure.Repositories;
 
@@ -12,9 +13,10 @@ internal sealed class FinancialMovementCategoryRepository
     (IUserService userService, MongoDbContext dbContext)
     : IFinancialMovementCategoryRepository
 {
-    private readonly Dictionary<Guid, List<FinancialMovementCategory>> _financialMovementCategories = new();
+    private async Task<FinancialMovementCategoryDataEntity> GetDataEntityAsync(Guid id) =>
+        await dbContext.FinancialMovementCategories.FirstOrDefaultAsync(a => a.Id == id && a.UserId == userService.GetUserId());
 
-    public void Add(FinancialMovementCategory entity)
+    public async Task AddAsync(FinancialMovementCategory entity)
     {
         FinancialMovementCategoryDataEntity dataEntity = new()
         {
@@ -24,13 +26,13 @@ internal sealed class FinancialMovementCategoryRepository
             UserId = userService.GetUserId()
         };
 
-        dbContext.FinancialMovementCategories.Add(dataEntity);
-        dbContext.SaveChanges();
+        await dbContext.FinancialMovementCategories.AddAsync(dataEntity);
+        await dbContext.SaveChangesAsync();
     }
 
-    public FinancialMovementCategory GetById(Guid id)
+    public async Task<FinancialMovementCategory> GetByIdAsync(Guid id)
     {
-        FinancialMovementCategoryDataEntity dataEntity = dbContext.FinancialMovementCategories.FirstOrDefault(a =>  a.Id == id);
+        FinancialMovementCategoryDataEntity dataEntity = await GetDataEntityAsync(id);
 
         if (dataEntity == null)
             return null;
@@ -38,31 +40,24 @@ internal sealed class FinancialMovementCategoryRepository
         return new(new Name(dataEntity.Name), dataEntity.CreationDateTime, dataEntity.Id);
     }
 
-    public FinancialMovementCategory GetByIdOrThrow(Guid id)
+    public async Task<FinancialMovementCategory> GetByIdOrThrowAsync(Guid id)
     {
-        FinancialMovementCategory entity = GetById(id);
-
-        if (entity == null)
-            throw new NotFoundException(id);
-
-        return entity;
+        return await GetByIdAsync(id) ?? throw new NotFoundException(id);
     }
 
     public async Task UpdateAsync(FinancialMovementCategory entity)
     {
-        if (_financialMovementCategories.TryGetValue(userService.GetUserId(), out var financialMovementCategories))
-        {
-            financialMovementCategories.Remove(entity);
-            financialMovementCategories.Add(entity);
-        }
+        FinancialMovementCategoryDataEntity dataEntity = await GetDataEntityAsync(entity.Id);
+
+        dataEntity.Name = entity.Name.Value;
+        await dbContext.SaveChangesAsync();
     }
 
     public async Task RemoveAsync(Guid id)
     {
-        if (_financialMovementCategories.TryGetValue(userService.GetUserId(), out var financialMovementCategories))
-        {
-            FinancialMovementCategory entity = financialMovementCategories.Single(a => a.Id == id);
-            financialMovementCategories.Remove(entity);
-        }
+        FinancialMovementCategoryDataEntity dataEntity = await GetDataEntityAsync(id);
+
+        dbContext.Remove(dataEntity);
+        await dbContext.SaveChangesAsync();
     }
 }

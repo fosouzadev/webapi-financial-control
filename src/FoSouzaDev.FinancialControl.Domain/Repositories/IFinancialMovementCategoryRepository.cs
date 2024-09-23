@@ -4,12 +4,9 @@ using FoSouzaDev.FinancialControl.Domain.Entities;
 namespace FoSouzaDev.FinancialControl.Domain.Repositories;
 
 public interface IFinancialMovementCategoryRepository : 
-    //IAddRepository<FinancialMovementCategory>,
-    //IGetRepository<FinancialMovementCategory>,
+    IAddRepository<FinancialMovementCategory>,
+    IGetRepository<FinancialMovementCategory>,
     IUpdateRepository<FinancialMovementCategory>,
     IRemoveRepository<FinancialMovementCategory>
 {
-    void Add(FinancialMovementCategory entity);
-    FinancialMovementCategory GetById(Guid id);
-    FinancialMovementCategory GetByIdOrThrow(Guid id);
 }
