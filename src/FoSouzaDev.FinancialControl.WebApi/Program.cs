@@ -4,6 +4,7 @@ using FoSouzaDev.FinancialControl.Domain.Factories;
 using FoSouzaDev.FinancialControl.Domain.Factories.Interfaces;
 using FoSouzaDev.FinancialControl.Domain.Repositories;
 using FoSouzaDev.FinancialControl.Infrastructure.Repositories;
+using FoSouzaDev.FinancialControl.Infrastructure.Repositories.Generic;
 using FoSouzaDev.FinancialControl.Infrastructure.Repositories.MongoDatabase;
 using FoSouzaDev.FinancialControl.Infrastructure.Services;
 using FoSouzaDev.FinancialControl.Infrastructure.Services.Interfaces;
@@ -81,6 +82,7 @@ public class Program
         // dessa forma, os outros serviços também precisam ser definidos como Scoped
         services.AddScoped<IUserService, UserService>();
 
+        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IFinancialMovementCategoryRepository, FinancialMovementCategoryRepository>();
         services.AddScoped<IFinancialMovementRepository, FinancialMovementRepository>();
         services.AddScoped<IBankAccountRepository, BankAccountRepository>();
