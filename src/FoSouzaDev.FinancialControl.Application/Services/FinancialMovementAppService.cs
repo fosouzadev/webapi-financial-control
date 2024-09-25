@@ -10,20 +10,12 @@ using Microsoft.AspNetCore.JsonPatch;
 namespace FoSouzaDev.FinancialControl.Application.Services;
 
 internal sealed class FinancialMovementAppService
-    (IFinancialMovementFactory factory,
-     IFinancialMovementRepository repository,
-     IBankAccountRepository bankRepository,
-     IFinancialMovementCategoryRepository categoryRepository)
+    (IFinancialMovementFactory factory, IFinancialMovementRepository repository, IFinancialMovementCategoryRepository categoryRepository)
     : IFinancialMovementAppService
 {
     public async Task<Guid> AddAsync(AddFinancialMovementDto dto)
     {
-        BankAccount bankAccount = await bankRepository.GetByIdOrThrowAsync(dto.BankAccountId);
-        FinancialMovementCategory category = await categoryRepository.GetByIdOrThrowAsync(dto.CategoryId);
-
-        FinancialMovement financialMovement = factory.CreateEntityAsync(
-            dto.Name, dto.Amount, (Domain.Enums.FinancialMovementType)dto.Type, category, bankAccount);
-
+        FinancialMovement financialMovement = await factory.CreateEntityAsync(dto.Name, dto.Amount, (byte)dto.Type, dto.CategoryId, dto.BankAccountId);
         await repository.AddAsync(financialMovement);
 
         return financialMovement.Id;
@@ -57,6 +49,7 @@ internal sealed class FinancialMovementAppService
         };
         pathDocument.ApplyTo(dto);
 
+        // TODO: verificar se é possível melhorar isso
         FinancialMovementCategory category = await categoryRepository.GetByIdOrThrowAsync(dto.CategoryId);
 
         entity.Name = new Name(dto.Name);

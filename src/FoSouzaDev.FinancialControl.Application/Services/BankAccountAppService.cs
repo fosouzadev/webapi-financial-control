@@ -9,13 +9,12 @@ using Microsoft.AspNetCore.JsonPatch;
 namespace FoSouzaDev.FinancialControl.Application.Services;
 
 internal sealed class BankAccountAppService
-    (IBankAccountFactory factory,
-     IBankAccountRepository repository)
+    (IBankAccountFactory factory, IBankAccountRepository repository)
     : IBankAccountAppService
 {
     public async Task<Guid> AddAsync(AddBankAccountDto dto)
     {
-        BankAccount entity = factory.CreateEntity(dto.Name, dto.Description, (Domain.Enums.BankAccountType)dto.Type);
+        BankAccount entity = factory.CreateEntity(dto.Name, dto.Description, (byte)dto.Type);
         await repository.AddAsync(entity);
 
         return entity.Id;

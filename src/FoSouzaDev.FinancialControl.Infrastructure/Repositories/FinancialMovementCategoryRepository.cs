@@ -25,11 +25,12 @@ internal sealed class FinancialMovementCategoryRepository
     public async Task<FinancialMovementCategory> GetByIdAsync(Guid id)
     {
         FinancialMovementCategoryDataEntity dataEntity = await genericRepository.GetByIdAsync(id);
+        FinancialMovementCategory entity = null;
 
-        if (dataEntity == null)
-            return null;
+        if (dataEntity != null)
+            entity = factory.RebuildEntity(dataEntity.Name, dataEntity.CreationDateTime, dataEntity.Id);
 
-        return factory.RebuildEntity(dataEntity.Name, dataEntity.CreationDateTime, dataEntity.Id);
+        return entity;
     }
 
     public async Task<FinancialMovementCategory> GetByIdOrThrowAsync(Guid id)

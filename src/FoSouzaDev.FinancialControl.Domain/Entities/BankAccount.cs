@@ -17,5 +17,5 @@ public sealed class BankAccount(
     public string Description { get; set; } = description;
     public bool IsActive { get; set; } = isActive;
     public decimal Balance { get; private set; } = balance;
-    public BankAccountType Type { get; private init; } = type;
+    public BankAccountType Type { get; init; } = type;
 }

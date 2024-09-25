@@ -17,7 +17,7 @@ public sealed class FinancialMovementCategoryController(IFinancialMovementCatego
     public async Task<IResult> AddAsync(AddFinancialMovementCategoryDto dto)
     {
         Guid id = await appService.AddAsync(dto);
-        return TypedResults.Created(uri: (string?)null, new ResponseData<Guid>(data: id));
+        return TypedResults.Created(uri: (string)null, new ResponseData<Guid>(data: id));
     }
 
     [HttpGet("{id}")]

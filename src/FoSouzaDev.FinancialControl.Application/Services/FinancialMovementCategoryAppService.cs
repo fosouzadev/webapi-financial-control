@@ -23,6 +23,7 @@ internal sealed class FinancialMovementCategoryAppService
     public async Task<GetFinancialMovementCategoryDto> GetByIdAsync(Guid id)
     {
         FinancialMovementCategory entity = await repository.GetByIdOrThrowAsync(id);
+
         return new()
         {
             Id = entity.Id,

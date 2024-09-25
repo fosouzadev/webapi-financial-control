@@ -1,6 +1,6 @@
 ﻿namespace FoSouzaDev.FinancialControl.Infrastructure.DataEntities;
 
-internal class FinancialMovementCategoryDataEntity : DataEntity
+internal sealed class FinancialMovementCategoryDataEntity : DataEntity
 {
     public string Name { get; set; }
 }

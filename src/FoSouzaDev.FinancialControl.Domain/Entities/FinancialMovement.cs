@@ -15,7 +15,7 @@ public sealed class FinancialMovement(
 {
     public Name Name { get; set; } = name;
     public Amount Amount { get; set; } = amount;
-    public FinancialMovementType Type { get; private set; } = type;
+    public FinancialMovementType Type { get; init; } = type;
     public FinancialMovementCategory Category { get; set; } = category;
-    public BankAccount BankAccount { get; private set; } = bankAccount;
+    public BankAccount BankAccount { get; init; } = bankAccount;
 }

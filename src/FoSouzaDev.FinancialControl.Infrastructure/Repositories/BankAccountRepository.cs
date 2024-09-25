@@ -1,70 +1,71 @@
-﻿using FoSouzaDev.Common.Domain.Exceptions;
-using FoSouzaDev.FinancialControl.Domain.Entities;
+﻿using FoSouzaDev.FinancialControl.Domain.Entities;
+using FoSouzaDev.FinancialControl.Domain.Factories.Interfaces;
 using FoSouzaDev.FinancialControl.Domain.Repositories;
-using FoSouzaDev.FinancialControl.Infrastructure.Services.Interfaces;
+using FoSouzaDev.FinancialControl.Infrastructure.DataEntities;
+using FoSouzaDev.FinancialControl.Infrastructure.Repositories.Generic;
 
 namespace FoSouzaDev.FinancialControl.Infrastructure.Repositories;
 
-internal sealed class BankAccountRepository(IUserService service) : IBankAccountRepository
+internal sealed class BankAccountRepository
+    (IGenericRepository<BankAccountDataEntity> genericRepository, IBankAccountFactory factory)
+    : IBankAccountRepository
 {
-    private readonly Dictionary<Guid, List<BankAccount>> _bankAccounts = new();
-
     public async Task AddAsync(BankAccount entity)
     {
-        if (_bankAccounts.TryGetValue(service.GetUserId(), out var bankAccounts))
-            bankAccounts.Add(entity);
-        else
-            _bankAccounts.Add(service.GetUserId(), new List<BankAccount> { entity });
+        BankAccountDataEntity dataEntity = new()
+        {
+            Id = entity.Id,
+            Name = entity.Name.Value,
+            Description = entity.Description,
+            Type = (byte)entity.Type,
+            Balance = entity.Balance,
+            IsActive = entity.IsActive,
+            CreationDateTime = entity.CreationDateTime.UtcDateTime
+        };
+
+        await genericRepository.AddAsync(dataEntity);
     }
 
     public async Task<BankAccount> GetByIdAsync(Guid id)
     {
-        if (_bankAccounts.TryGetValue(service.GetUserId(), out var bankAccounts))
-            return bankAccounts.SingleOrDefault(a => a.Id == id);
+        BankAccountDataEntity dataEntity = await genericRepository.GetByIdAsync(id);
+        BankAccount entity = null;
 
-        return null;
-    }
-
-    public async Task<BankAccount> GetByIdOrThrowAsync(Guid id)
-    {
-        var entity = await GetByIdAsync(id);
-
-        if (entity == null)
-            throw new NotFoundException(id);
+        if (dataEntity != null)
+            entity = factory.RebuildEntity(
+                dataEntity.Name,
+                dataEntity.Description,
+                dataEntity.IsActive,
+                dataEntity.Type,
+                dataEntity.Balance,
+                dataEntity.CreationDateTime,
+                dataEntity.Id);
 
         return entity;
     }
 
-    public async Task UpdateAsync(BankAccount entity)
+    public async Task<BankAccount> GetByIdOrThrowAsync(Guid id)
     {
-        if (_bankAccounts.TryGetValue(service.GetUserId(), out var bankAccounts))
+        BankAccountDataEntity dataEntity = await genericRepository.GetByIdOrThrowAsync(id);
+
+        return factory.RebuildEntity(
+            dataEntity.Name,
+            dataEntity.Description,
+            dataEntity.IsActive,
+            dataEntity.Type,
+            dataEntity.Balance,
+            dataEntity.CreationDateTime,
+            dataEntity.Id);
+    }
+
+    public async Task UpdateAsync(BankAccount entity) =>
+        await genericRepository.UpdateAsync(entity.Id, dataEntity =>
         {
-            bankAccounts.Remove(entity);
-            bankAccounts.Add(entity);
-        }
-    }
+            dataEntity.Name = entity.Name.Value;
+            dataEntity.Description = entity.Description;
+            dataEntity.IsActive = entity.IsActive;
+        });
 
-    public async Task RemoveAsync(Guid id)
-    {
-        if (_bankAccounts.TryGetValue(service.GetUserId(), out var bankAccounts))
-        {
-            BankAccount entity = bankAccounts.Single(a => a.Id == id);
-            bankAccounts.Remove(entity);
-        }
-    }
-
-    public async Task AddFinancialMovementAsync(FinancialMovement financialMovement)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<FinancialMovement> GetFinancialMovementByIdOrThrowAsync(Guid bankAccountId, Guid financialMovementId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task UpdateFinancialMovementAsync(FinancialMovement financialMovement)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task RemoveAsync(Guid id) =>
+        await genericRepository.RemoveAsync(id);
 }
