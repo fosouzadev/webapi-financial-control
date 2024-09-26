@@ -12,8 +12,8 @@ public sealed class FinancialMovementCategoryController(IFinancialMovementCatego
 {
     [HttpPost]
     [ProducesResponseType<ResponseData<Guid>>(StatusCodes.Status201Created)]
-    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<ResponseData>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ResponseData>(StatusCodes.Status500InternalServerError)]
     public async Task<IResult> AddAsync(AddFinancialMovementCategoryDto dto)
     {
         Guid id = await appService.AddAsync(dto);
@@ -23,7 +23,7 @@ public sealed class FinancialMovementCategoryController(IFinancialMovementCatego
     [HttpGet("{id}")]
     [ProducesResponseType<ResponseData<Guid>>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ResponseData<GetFinancialMovementCategoryDto>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<ResponseData>(StatusCodes.Status500InternalServerError)]
     public async Task<IResult> GetByIdAsync([FromRoute] Guid id)
     {
         GetFinancialMovementCategoryDto dto = await appService.GetByIdAsync(id);
@@ -31,10 +31,10 @@ public sealed class FinancialMovementCategoryController(IFinancialMovementCatego
     }
 
     [HttpPatch("{id}")]
-    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ResponseData>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ResponseData<Guid>>(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<ResponseData>(StatusCodes.Status500InternalServerError)]
     public async Task<IResult> UpdateAsync([FromRoute] Guid id, [FromBody] JsonPatchDocument<UpdateFinancialMovementCategoryDto> pathDocument)
     {
         await appService.UpdateAsync(id, pathDocument);
@@ -44,7 +44,7 @@ public sealed class FinancialMovementCategoryController(IFinancialMovementCatego
     [HttpDelete("{id}")]
     [ProducesResponseType<ResponseData<Guid>>(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<ResponseData>(StatusCodes.Status500InternalServerError)]
     public async Task<IResult> RemoveAsync([FromRoute] Guid id)
     {
         await appService.RemoveAsync(id);

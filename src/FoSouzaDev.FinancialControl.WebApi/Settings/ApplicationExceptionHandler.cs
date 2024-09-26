@@ -14,9 +14,10 @@ public sealed class ApplicationExceptionHandler(
     private async Task WriteResponseAsync<T>(
         HttpResponse httpResponse,
         int statusCode,
-        ResponseData<T> responseData,
+        T responseData,
         Exception exception,
         CancellationToken cancellationToken)
+        where T : ResponseBase
     {
         httpResponse.StatusCode = statusCode;
 
@@ -31,7 +32,7 @@ public sealed class ApplicationExceptionHandler(
         {
             case ValidateException:
             case JsonPatchException:
-                await WriteResponseAsync(httpContext.Response, StatusCodes.Status400BadRequest, new ResponseData<object>(data: null, errorMessage: exception.Message), exception, cancellationToken);
+                await WriteResponseAsync(httpContext.Response, StatusCodes.Status400BadRequest, new ResponseData(errorMessage: exception.Message), exception, cancellationToken);
                 break;
             case NotFoundException ex:
                 await WriteResponseAsync(httpContext.Response, StatusCodes.Status404NotFound, new ResponseData<Guid>(data: ex.Id, errorMessage: exception.Message), exception, cancellationToken);
@@ -40,7 +41,7 @@ public sealed class ApplicationExceptionHandler(
                 await WriteResponseAsync(httpContext.Response, StatusCodes.Status409Conflict, new ResponseData<Guid>(data: ex.Id, errorMessage: exception.Message), exception, cancellationToken);
                 break;
             default:
-                await WriteResponseAsync(httpContext.Response, StatusCodes.Status500InternalServerError, new ResponseData<object>(data: null, errorMessage: "Internal server error."), exception, cancellationToken);
+                await WriteResponseAsync(httpContext.Response, StatusCodes.Status500InternalServerError, new ResponseData(errorMessage: "Internal server error."), exception, cancellationToken);
                 break;
         }
 

@@ -37,12 +37,13 @@ public sealed class ApplicationExceptionHandlerTest : BaseTest
         _handler = new(_loggerMock.Object, _httpResponseWriterMock.Object);
     }
 
-    private async Task ActAndAssertAsync<TException, TData>(
+    private async Task ActAndAssertAsync<TException, TResponseData>(
         TException expectedException,
         int expectedHttpStatusCode,
         Expression<Func<TException, bool>> verifyLoggerException,
-        Expression<Func<ResponseData<TData>, bool>> verifyWriteResponse)
+        Expression<Func<TResponseData, bool>> verifyWriteResponse)
         where TException : Exception
+        where TResponseData : ResponseBase
     {
         // Act
         bool act = await _handler.TryHandleAsync(_httpContextMock.Object, expectedException, CancellationToken.None);
@@ -76,11 +77,11 @@ public sealed class ApplicationExceptionHandlerTest : BaseTest
         ValidateException exception = base.Fixture.Create<ValidateException>();
 
         // Act / Assert
-        await ActAndAssertAsync<ValidateException, object>(
+        await ActAndAssertAsync<ValidateException, ResponseData>(
             exception,
             StatusCodes.Status400BadRequest,
             ex => ex.Message == exception.Message,
-            responseData => responseData.Data == null && responseData.ErrorMessage == exception.Message);
+            responseData => responseData.ErrorMessage == exception.Message);
     }
 
     [Fact]
@@ -90,11 +91,11 @@ public sealed class ApplicationExceptionHandlerTest : BaseTest
         JsonPatchException exception = base.Fixture.Create<JsonPatchException>();
 
         // Act / Assert
-        await ActAndAssertAsync<JsonPatchException, object>(
+        await ActAndAssertAsync<JsonPatchException, ResponseData>(
             exception,
             StatusCodes.Status400BadRequest,
             ex => ex.Message == exception.Message,
-            responseData => responseData.Data == null && responseData.ErrorMessage == exception.Message);
+            responseData => responseData.ErrorMessage == exception.Message);
     }
 
     [Fact]
@@ -104,7 +105,7 @@ public sealed class ApplicationExceptionHandlerTest : BaseTest
         NotFoundException exception = base.Fixture.Create<NotFoundException>();
 
         // Act / Assert
-        await ActAndAssertAsync<NotFoundException, Guid>(
+        await ActAndAssertAsync<NotFoundException, ResponseData<Guid>>(
             exception,
             StatusCodes.Status404NotFound,
             ex => ex.Id == exception.Id && ex.Message == exception.Message,
@@ -118,7 +119,7 @@ public sealed class ApplicationExceptionHandlerTest : BaseTest
         ConflictException exception = base.Fixture.Create<ConflictException>();
 
         // Act / Assert
-        await ActAndAssertAsync<ConflictException, Guid>(
+        await ActAndAssertAsync<ConflictException, ResponseData<Guid>>(
             exception,
             StatusCodes.Status409Conflict,
             ex => ex.Id == exception.Id && ex.Message == exception.Message,
@@ -132,10 +133,10 @@ public sealed class ApplicationExceptionHandlerTest : BaseTest
         Exception exception = base.Fixture.Create<Exception>();
 
         // Act / Assert
-        await ActAndAssertAsync<Exception, object>(
+        await ActAndAssertAsync<Exception, ResponseData>(
             exception,
             StatusCodes.Status500InternalServerError,
             ex => ex.Message == exception.Message,
-            responseData => responseData.Data == null && responseData.ErrorMessage == "Internal server error.");
+            responseData => responseData.ErrorMessage == "Internal server error.");
     }
 }

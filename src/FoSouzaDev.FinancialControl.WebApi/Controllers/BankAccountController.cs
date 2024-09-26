@@ -11,8 +11,8 @@ public class BankAccountController(IBankAccountAppService appService) : Applicat
 {
     [HttpPost]
     [ProducesResponseType<ResponseData<Guid>>(StatusCodes.Status201Created)]
-    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<ResponseData>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ResponseData>(StatusCodes.Status500InternalServerError)]
     public async Task<IResult> AddAsync(AddBankAccountDto dto)
     {
         Guid id = await appService.AddAsync(dto);
@@ -22,7 +22,7 @@ public class BankAccountController(IBankAccountAppService appService) : Applicat
     [HttpGet("{id}")]
     [ProducesResponseType<ResponseData<Guid>>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ResponseData<GetBankAccountDto>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<ResponseData>(StatusCodes.Status500InternalServerError)]
     public async Task<IResult> GetByIdAsync([FromRoute] Guid id)
     {
         GetBankAccountDto dto = await appService.GetByIdAsync(id);
@@ -30,10 +30,10 @@ public class BankAccountController(IBankAccountAppService appService) : Applicat
     }
 
     [HttpPatch("{id}")]
-    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ResponseData>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ResponseData<Guid>>(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<ResponseData>(StatusCodes.Status500InternalServerError)]
     public async Task<IResult> UpdateAsync([FromRoute] Guid id, [FromBody] JsonPatchDocument<UpdateBankAccountDto> pathDocument)
     {
         await appService.UpdateAsync(id, pathDocument);
@@ -43,7 +43,7 @@ public class BankAccountController(IBankAccountAppService appService) : Applicat
     [HttpDelete("{id}")]
     [ProducesResponseType<ResponseData<Guid>>(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType<ResponseData<string>>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<ResponseData>(StatusCodes.Status500InternalServerError)]
     public async Task<IResult> RemoveAsync([FromRoute] Guid id)
     {
         await appService.RemoveAsync(id);

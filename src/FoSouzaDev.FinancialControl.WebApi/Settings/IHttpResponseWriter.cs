@@ -4,5 +4,6 @@ namespace FoSouzaDev.FinancialControl.WebApi.Settings;
 
 public interface IHttpResponseWriter
 {
-    Task WriteAsJsonAsync<T>(HttpResponse httpResponse, ResponseData<T> responseData, CancellationToken cancellationToken);
+    Task WriteAsJsonAsync<T>(HttpResponse httpResponse, T responseData, CancellationToken cancellationToken)
+        where T : ResponseBase;
 }
