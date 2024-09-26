@@ -11,6 +11,7 @@ using FoSouzaDev.FinancialControl.Infrastructure.Services.Interfaces;
 using FoSouzaDev.FinancialControl.WebApi.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
@@ -23,8 +24,15 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
+        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+        Add(builder);
 
+        WebApplication app = builder.Build();
+        Use(app);
+    }
+
+    private static void Add(WebApplicationBuilder builder)
+    {
         builder.Services.AddLogging(a => a.AddConsole());
 
         AddApplicationServices(builder.Services, builder.Configuration);
@@ -34,8 +42,10 @@ public class Program
             options.LowercaseUrls = true;
             options.LowercaseQueryStrings = true;
         });
-        builder.Services.AddControllers().AddNewtonsoftJson(options =>
-            options.SerializerSettings.Converters.Add(new StringEnumConverter()));
+        builder.Services.AddControllers()
+            .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new StringEnumConverter()))
+            // Utilizado pelo endpoint de POST para localizar a URL da respectiva Action
+            .AddMvcOptions(options => options.SuppressAsyncSuffixInActionNames = false);
         builder.Services.AddEndpointsApiExplorer();
 
         AddSwagger(builder.Services);
@@ -44,8 +54,13 @@ public class Program
         builder.Services.AddExceptionHandler<ApplicationExceptionHandler>();
         builder.Services.AddProblemDetails();
 
-        WebApplication app = builder.Build();
+        builder.Services
+            .AddHealthChecks()
+            .AddMongoDb(provider => provider.GetRequiredService<IMongoClient>(), "MongoDb", HealthStatus.Unhealthy);
+    }
 
+    private static void Use(WebApplication app)
+    {
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -58,6 +73,8 @@ public class Program
         app.MapControllers();
         app.UseExceptionHandler();
 
+        app.UseHealthChecks("/api/health-check");
+
         app.Run();
     }
 
@@ -67,13 +84,16 @@ public class Program
         services.AddSingleton<IHttpResponseWriter, HttpResponseWriter>();
 
         services.Configure<MongoDbSettings>(configuration.GetSection(nameof(MongoDbSettings)));
+        services.AddSingleton<IMongoClient>(provider =>
+        {
+            MongoDbSettings mongoDbSettings = provider.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+            return new MongoClient(mongoDbSettings.ConnectionUri);
+        });
         services.AddDbContext<MongoDbContext>(
             (provider, options) =>
             {
                 MongoDbSettings mongoDbSettings = provider.GetRequiredService<IOptions<MongoDbSettings>>().Value;
-                IMongoClient mongoClient = new MongoClient(mongoDbSettings.ConnectionUri);
-
-                options.UseMongoDB(mongoClient, mongoDbSettings.DatabaseName);
+                options.UseMongoDB(provider.GetRequiredService<IMongoClient>(), mongoDbSettings.DatabaseName);
             },
             contextLifetime: ServiceLifetime.Singleton,
             optionsLifetime: ServiceLifetime.Singleton);

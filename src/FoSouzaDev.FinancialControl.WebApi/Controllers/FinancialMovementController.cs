@@ -16,7 +16,7 @@ public class FinancialMovementController(IFinancialMovementAppService appService
     public async Task<IResult> AddAsync(AddFinancialMovementDto dto)
     {
         Guid id = await appService.AddAsync(dto);
-        return TypedResults.Created(uri: (string?)null, new ResponseData<Guid>(data: id));
+        return TypedResults.Created(uri: Url.Action(nameof(GetByIdAsync), new { id }), new ResponseData<Guid>(data: id));
     }
 
     [HttpGet("{id}")]

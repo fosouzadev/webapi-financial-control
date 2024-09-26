@@ -16,7 +16,7 @@ public class BankAccountController(IBankAccountAppService appService) : Applicat
     public async Task<IResult> AddAsync(AddBankAccountDto dto)
     {
         Guid id = await appService.AddAsync(dto);
-        return TypedResults.Created(uri: (string?)null, new ResponseData<Guid>(data: id));
+        return TypedResults.Created(uri: Url.Action(nameof(GetByIdAsync), new { id }), new ResponseData<Guid>(data: id));
     }
 
     [HttpGet("{id}")]
