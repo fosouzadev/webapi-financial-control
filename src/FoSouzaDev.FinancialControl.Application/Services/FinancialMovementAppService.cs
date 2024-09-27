@@ -37,7 +37,7 @@ internal sealed class FinancialMovementAppService
         };
     }
 
-    public async Task UpdateAsync(Guid financialMovementId, JsonPatchDocument<UpdateFinancialMovementDto> pathDocument)
+    public async Task UpdateAsync(Guid financialMovementId, JsonPatchDocument<UpdateFinancialMovementDto> jsonPathDocument)
     {
         FinancialMovement entity = await repository.GetByIdOrThrowAsync(financialMovementId);
 
@@ -47,7 +47,7 @@ internal sealed class FinancialMovementAppService
             Amount = entity.Amount.Value,
             CategoryId = entity.Category.Id
         };
-        pathDocument.ApplyTo(dto);
+        jsonPathDocument.ApplyTo(dto);
 
         // TODO: verificar se é possível melhorar isso
         FinancialMovementCategory category = await categoryRepository.GetByIdOrThrowAsync(dto.CategoryId);

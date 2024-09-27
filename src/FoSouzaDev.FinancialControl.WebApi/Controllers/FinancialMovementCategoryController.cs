@@ -14,9 +14,9 @@ public sealed class FinancialMovementCategoryController(IFinancialMovementCatego
     [ProducesResponseType<ResponseData<Guid>>(StatusCodes.Status201Created)]
     [ProducesResponseType<ResponseData>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ResponseData>(StatusCodes.Status500InternalServerError)]
-    public async Task<IResult> AddAsync(AddFinancialMovementCategoryDto dto)
+    public async Task<IResult> AddAsync(AddFinancialMovementCategoryDto request)
     {
-        Guid id = await appService.AddAsync(dto);
+        Guid id = await appService.AddAsync(request);
         return TypedResults.Created(uri: Url.Action(nameof(GetByIdAsync), new { id }), new ResponseData<Guid>(data: id));
     }
 
@@ -26,8 +26,8 @@ public sealed class FinancialMovementCategoryController(IFinancialMovementCatego
     [ProducesResponseType<ResponseData>(StatusCodes.Status500InternalServerError)]
     public async Task<IResult> GetByIdAsync([FromRoute] Guid id)
     {
-        GetFinancialMovementCategoryDto dto = await appService.GetByIdAsync(id);
-        return TypedResults.Ok(new ResponseData<GetFinancialMovementCategoryDto>(dto));
+        GetFinancialMovementCategoryDto data = await appService.GetByIdAsync(id);
+        return TypedResults.Ok(new ResponseData<GetFinancialMovementCategoryDto>(data));
     }
 
     [HttpPatch("{id}")]
@@ -35,9 +35,9 @@ public sealed class FinancialMovementCategoryController(IFinancialMovementCatego
     [ProducesResponseType<ResponseData<Guid>>(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType<ResponseData>(StatusCodes.Status500InternalServerError)]
-    public async Task<IResult> UpdateAsync([FromRoute] Guid id, [FromBody] JsonPatchDocument<UpdateFinancialMovementCategoryDto> pathDocument)
+    public async Task<IResult> UpdateAsync([FromRoute] Guid id, [FromBody] JsonPatchDocument<UpdateFinancialMovementCategoryDto> jsonPathDocument)
     {
-        await appService.UpdateAsync(id, pathDocument);
+        await appService.UpdateAsync(id, jsonPathDocument);
         return TypedResults.NoContent();
     }
 

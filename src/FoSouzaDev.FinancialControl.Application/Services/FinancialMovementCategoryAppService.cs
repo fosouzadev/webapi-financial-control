@@ -32,12 +32,12 @@ internal sealed class FinancialMovementCategoryAppService
         };
     }
 
-    public async Task UpdateAsync(Guid id, JsonPatchDocument<UpdateFinancialMovementCategoryDto> pathDocument)
+    public async Task UpdateAsync(Guid id, JsonPatchDocument<UpdateFinancialMovementCategoryDto> jsonPathDocument)
     {
         FinancialMovementCategory entity = await repository.GetByIdOrThrowAsync(id);
 
         UpdateFinancialMovementCategoryDto dto = new() { Name = entity.Name.Value };
-        pathDocument.ApplyTo(dto);
+        jsonPathDocument.ApplyTo(dto);
 
         entity.Name = new Name(dto.Name);
 

@@ -36,7 +36,7 @@ internal sealed class BankAccountAppService
         };
     }
 
-    public async Task UpdateAsync(Guid id, JsonPatchDocument<UpdateBankAccountDto> pathDocument)
+    public async Task UpdateAsync(Guid id, JsonPatchDocument<UpdateBankAccountDto> jsonPathDocument)
     {
         BankAccount entity = await repository.GetByIdOrThrowAsync(id);
 
@@ -46,7 +46,7 @@ internal sealed class BankAccountAppService
             Description = entity.Description,
             IsActive = entity.IsActive
         };
-        pathDocument.ApplyTo(dto);
+        jsonPathDocument.ApplyTo(dto);
 
         entity.Name = new Name(dto.Name);
         entity.Description = dto.Description;

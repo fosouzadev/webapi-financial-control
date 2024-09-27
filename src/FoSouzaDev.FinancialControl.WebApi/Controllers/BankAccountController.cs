@@ -13,9 +13,9 @@ public class BankAccountController(IBankAccountAppService appService) : Applicat
     [ProducesResponseType<ResponseData<Guid>>(StatusCodes.Status201Created)]
     [ProducesResponseType<ResponseData>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ResponseData>(StatusCodes.Status500InternalServerError)]
-    public async Task<IResult> AddAsync(AddBankAccountDto dto)
+    public async Task<IResult> AddAsync(AddBankAccountDto request)
     {
-        Guid id = await appService.AddAsync(dto);
+        Guid id = await appService.AddAsync(request);
         return TypedResults.Created(uri: Url.Action(nameof(GetByIdAsync), new { id }), new ResponseData<Guid>(data: id));
     }
 
@@ -25,8 +25,8 @@ public class BankAccountController(IBankAccountAppService appService) : Applicat
     [ProducesResponseType<ResponseData>(StatusCodes.Status500InternalServerError)]
     public async Task<IResult> GetByIdAsync([FromRoute] Guid id)
     {
-        GetBankAccountDto dto = await appService.GetByIdAsync(id);
-        return TypedResults.Ok(new ResponseData<GetBankAccountDto>(dto));
+        GetBankAccountDto data = await appService.GetByIdAsync(id);
+        return TypedResults.Ok(new ResponseData<GetBankAccountDto>(data));
     }
 
     [HttpPatch("{id}")]
@@ -34,9 +34,9 @@ public class BankAccountController(IBankAccountAppService appService) : Applicat
     [ProducesResponseType<ResponseData<Guid>>(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType<ResponseData>(StatusCodes.Status500InternalServerError)]
-    public async Task<IResult> UpdateAsync([FromRoute] Guid id, [FromBody] JsonPatchDocument<UpdateBankAccountDto> pathDocument)
+    public async Task<IResult> UpdateAsync([FromRoute] Guid id, [FromBody] JsonPatchDocument<UpdateBankAccountDto> jsonPathDocument)
     {
-        await appService.UpdateAsync(id, pathDocument);
+        await appService.UpdateAsync(id, jsonPathDocument);
         return TypedResults.NoContent();
     }
 

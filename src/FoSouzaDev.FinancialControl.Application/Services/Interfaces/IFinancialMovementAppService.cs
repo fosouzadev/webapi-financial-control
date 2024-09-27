@@ -7,5 +7,5 @@ public interface IFinancialMovementAppService
 {
     Task<Guid> AddAsync(AddFinancialMovementDto dto);
     Task<GetFinancialMovementDto> GetByIdAsync(Guid id);
-    Task UpdateAsync(Guid id, JsonPatchDocument<UpdateFinancialMovementDto> pathDocument);
+    Task UpdateAsync(Guid id, JsonPatchDocument<UpdateFinancialMovementDto> jsonPathDocument);
 }
