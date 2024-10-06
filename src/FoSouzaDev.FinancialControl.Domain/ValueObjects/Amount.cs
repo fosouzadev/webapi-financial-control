@@ -9,7 +9,7 @@ public sealed record Amount
     public Amount(decimal value)
     {
         if (value <= 0)
-            throw new ValidateException($"{nameof(Value)} cannot be less than or equal to zero.");
+            throw new ValidateException($"{nameof(Amount)} cannot be less than or equal to zero.");
 
         Value = value;
     }

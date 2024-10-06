@@ -44,7 +44,7 @@ public class Program
         });
         builder.Services.AddControllers()
             .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new StringEnumConverter()))
-            // Utilizado pelo endpoint de POST para localizar a URL da respectiva Action
+            // Utilizado pelo endpoint de POST para localizar a URL da respectiva Action quando tiver o sufixo Async
             .AddMvcOptions(options => options.SuppressAsyncSuffixInActionNames = false);
         builder.Services.AddEndpointsApiExplorer();
 
