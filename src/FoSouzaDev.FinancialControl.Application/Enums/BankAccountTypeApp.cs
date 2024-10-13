@@ -1,6 +1,6 @@
 ﻿namespace FoSouzaDev.FinancialControl.Application.Enums;
 
-public enum BankAccountTypeEnum : byte
+public enum BankAccountTypeApp : byte
 {
     CheckingAccount = 1,
     SavingsAccount = 2

@@ -30,7 +30,7 @@ internal sealed class FinancialMovementAppService
             Id = financialMovement.Id,
             Name = financialMovement.Name.Value,
             Amount = financialMovement.Amount.Value,
-            Type = (FinancialMovementTypeEnum)financialMovement.Type,
+            Type = (FinancialMovementTypeApp)financialMovement.Type,
             CategoryId = financialMovement.Category.Id,
             BankAccountId = financialMovement.BankAccount.Id,
             CreationDateTime = financialMovement.CreationDateTime
