@@ -7,7 +7,7 @@ namespace FoSouzaDev.FinancialControl.Domain.Factories;
 internal sealed class FinancialMovementCategoryFactory : IFinancialMovementCategoryFactory
 {
     public FinancialMovementCategory CreateEntity(string name) =>
-        new(new Name(name), DateTimeOffset.UtcNow, Guid.NewGuid());
+        RebuildEntity(name, DateTimeOffset.UtcNow, Guid.NewGuid());
 
     public FinancialMovementCategory RebuildEntity(string name, DateTimeOffset creationDateTime, Guid id) =>
         new(new Name(name), creationDateTime, id);

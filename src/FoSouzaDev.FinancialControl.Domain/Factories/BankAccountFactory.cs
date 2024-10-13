@@ -7,12 +7,8 @@ namespace FoSouzaDev.FinancialControl.Domain.Factories;
 
 internal sealed class BankAccountFactory : FactoryBase, IBankAccountFactory
 {
-    public BankAccount CreateEntity(string name, string description, byte type)
-    {
-        base.ThrowIfIsNotValidValue<BankAccountType>(type);
-
-        return new(new Name(name), description, true, (BankAccountType)type, 0, DateTimeOffset.UtcNow, Guid.NewGuid());
-    }
+    public BankAccount CreateEntity(string name, string description, byte type) =>
+        RebuildEntity(name, description, true, type, 0, DateTimeOffset.UtcNow, Guid.NewGuid());
 
     public BankAccount RebuildEntity(
         string name, string description, bool isActive, byte type, decimal balance, DateTimeOffset creationDateTime, Guid id)
