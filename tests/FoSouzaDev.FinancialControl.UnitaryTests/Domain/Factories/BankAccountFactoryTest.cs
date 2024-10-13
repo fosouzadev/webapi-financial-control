@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using FluentAssertions;
+using FoSouzaDev.FinancialControl.Domain.DataTransferObjects;
 using FoSouzaDev.FinancialControl.Domain.Entities;
 using FoSouzaDev.FinancialControl.Domain.Enums;
 using FoSouzaDev.FinancialControl.Domain.Factories;
@@ -15,94 +16,78 @@ public sealed class BankAccountFactoryTest : BaseTest
     public BankAccountFactoryTest()
     {
         _factory = new BankAccountFactory();
+
+        base.Fixture.Customize<BankAccountCreateDto>(a => a.With(b => b.Type, (byte)base.Fixture.Create<BankAccountType>()));
+        base.Fixture.Customize<BankAccountRebuildDto>(a => a.With(b => b.Type, (byte)base.Fixture.Create<BankAccountType>()));
     }
 
     [Fact]
-    public void CreateEntity_ValidInput_ReturnEntity()
+    public async Task CreateEntityAsync_ValidInput_ReturnEntity()
     {
         // Arrange
-        string expectedName = base.Fixture.Create<string>();
-        string expectedDescription = base.Fixture.Create<string>();
-        BankAccountType expectedType = base.Fixture.Create<BankAccountType>();
+        BankAccountCreateDto createDto = base.Fixture.Create<BankAccountCreateDto>();
 
         // Act
-        BankAccount entity = _factory.CreateEntity(expectedName, expectedDescription, (byte)expectedType);
+        BankAccount entity = await _factory.CreateEntityAsync(createDto);
 
         // Assert
-        entity.Name.Should().Be(new Name(expectedName));
-        entity.Description.Should().Be(expectedDescription);
+        entity.Name.Should().Be(new Name(createDto.Name));
+        entity.Description.Should().Be(createDto.Description);
         entity.IsActive.Should().BeTrue();
-        entity.Type.Should().Be(expectedType);
+        entity.Type.Should().Be((BankAccountType)createDto.Type);
         entity.Balance.Should().Be(0);
         entity.CreationDateTime.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(1));
         entity.Id.Should().NotBe(Guid.Empty);
     }
 
     [Fact]
-    public void CreateEntity_InvalidBankAccountType_ThrowException()
+    public async Task CreateEntityAsync_InvalidBankAccountType_ThrowException()
     {
         // Arrange
-        byte invalidType = 0;
+        BankAccountCreateDto createDto = base.Fixture.Build<BankAccountCreateDto>()
+            .With(a => a.Type, 0)
+            .Create();
 
         // Act
-        Action act = () => _factory.CreateEntity(base.Fixture.Create<string>(), base.Fixture.Create<string>(), invalidType);
+        Func<Task> act = () => _factory.CreateEntityAsync(createDto);
 
         // Assert
-        act.Should().Throw<ArgumentException>()
-            .WithMessage($"Invalid value for enum {nameof(BankAccountType)}: {invalidType}");
+        (await act.Should().ThrowAsync<ArgumentException>())
+            .WithMessage($"Invalid value for enum {nameof(BankAccountType)}: {createDto.Type}");
     }
 
     [Fact]
-    public void RebuildEntity_ValidInput_ReturnEntity()
+    public async Task RebuildEntityAsync_ValidInput_ReturnEntity()
     {
         // Arrange
-        string expectedName = base.Fixture.Create<string>();
-        string expectedDescription = base.Fixture.Create<string>();
-        bool expectedIsActive = base.Fixture.Create<bool>();
-        BankAccountType expectedType = base.Fixture.Create<BankAccountType>();
-        decimal expectedBalance = base.Fixture.Create<decimal>();
-        DateTimeOffset expectedCreationDateTime = base.Fixture.Create<DateTimeOffset>();
-        Guid expectedId = base.Fixture.Create<Guid>();
+        BankAccountRebuildDto rebuildDto = base.Fixture.Create<BankAccountRebuildDto>();
 
         // Act
-        BankAccount entity = _factory.RebuildEntity(
-            expectedName,
-            expectedDescription,
-            expectedIsActive,
-            type: (byte)expectedType,
-            expectedBalance,
-            expectedCreationDateTime,
-            expectedId);
+        BankAccount entity = await _factory.RebuildEntityAsync(rebuildDto);
 
         // Assert
-        entity.Name.Should().Be(new Name(expectedName));
-        entity.Description.Should().Be(expectedDescription);
-        entity.IsActive.Should().Be(expectedIsActive);
-        entity.Type.Should().Be(expectedType);
-        entity.Balance.Should().Be(expectedBalance);
-        entity.CreationDateTime.Should().Be(expectedCreationDateTime);
-        entity.Id.Should().Be(expectedId);
+        entity.Name.Should().Be(new Name(rebuildDto.Name));
+        entity.Description.Should().Be(rebuildDto.Description);
+        entity.IsActive.Should().Be(rebuildDto.IsActive);
+        entity.Type.Should().Be((BankAccountType)rebuildDto.Type);
+        entity.Balance.Should().Be(rebuildDto.Balance);
+        entity.CreationDateTime.Should().Be(rebuildDto.CreationDateTime);
+        entity.Id.Should().Be(rebuildDto.Id);
     }
 
     [Fact]
-    public void RebuildEntity_InvalidBankAccountType_ThrowException()
+    public async Task RebuildEntityAsync_InvalidBankAccountType_ThrowException()
     {
         // Arrange
-        byte invalidType = 0;
+        BankAccountRebuildDto rebuildDto = base.Fixture.Build<BankAccountRebuildDto>()
+            .With(a => a.Type, 0)
+            .Create();
 
         // Act
-        Action act = () => _factory.RebuildEntity(
-            base.Fixture.Create<string>(),
-            base.Fixture.Create<string>(),
-            base.Fixture.Create<bool>(),
-            invalidType,
-            base.Fixture.Create<decimal>(),
-            base.Fixture.Create<DateTimeOffset>(),
-            base.Fixture.Create<Guid>()
-            );
+        Func<Task> act = () => _factory.RebuildEntityAsync(rebuildDto);
 
         // Assert
-        act.Should().Throw<ArgumentException>()
-            .WithMessage($"Invalid value for enum {nameof(BankAccountType)}: {invalidType}");
+        (await act.Should().ThrowAsync<ArgumentException>())
+            .WithMessage($"Invalid value for enum {nameof(BankAccountType)}: {rebuildDto.Type}");
     }
 }

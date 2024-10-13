@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using FluentAssertions;
+using FoSouzaDev.FinancialControl.Domain.DataTransferObjects;
 using FoSouzaDev.FinancialControl.Domain.Entities;
 using FoSouzaDev.FinancialControl.Domain.Factories;
 using FoSouzaDev.FinancialControl.Domain.Factories.Interfaces;
@@ -17,34 +18,32 @@ public sealed class FinancialMovementCategoryFactoryTest : BaseTest
     }
 
     [Fact]
-    public void CreateEntity_ValidInput_ReturnEntity()
+    public async Task CreateEntityAsync_ValidInput_ReturnEntity()
     {
         // Arrange
-        string expectedName = base.Fixture.Create<string>();
+        FinancialMovementCategoryCreateDto createDto = base.Fixture.Create<FinancialMovementCategoryCreateDto>();
 
         // Act
-        FinancialMovementCategory entity = _factory.CreateEntity(expectedName);
+        FinancialMovementCategory entity = await _factory.CreateEntityAsync(createDto);
 
         // Assert
-        entity.Name.Should().Be(new Name(expectedName));
+        entity.Name.Should().Be(new Name(createDto.Name));
         entity.CreationDateTime.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(1));
         entity.Id.Should().NotBe(Guid.Empty);
     }
 
     [Fact]
-    public void RebuildEntity_ValidInput_ReturnEntity()
+    public async Task RebuildEntityAsync_ValidInput_ReturnEntity()
     {
         // Arrange
-        string expectedName = base.Fixture.Create<string>();
-        DateTimeOffset expectedCreationDateTime = base.Fixture.Create<DateTimeOffset>();
-        Guid expectedId = base.Fixture.Create<Guid>();
+        FinancialMovementCategoryRebuildDto rebuildDto = base.Fixture.Create<FinancialMovementCategoryRebuildDto>();
 
         // Act
-        FinancialMovementCategory entity = _factory.RebuildEntity(expectedName, expectedCreationDateTime, expectedId);
+        FinancialMovementCategory entity = await _factory.RebuildEntityAsync(rebuildDto);
 
         // Assert
-        entity.Name.Should().Be(new Name(expectedName));
-        entity.CreationDateTime.Should().Be(expectedCreationDateTime);
-        entity.Id.Should().Be(expectedId);
+        entity.Name.Should().Be(new Name(rebuildDto.Name));
+        entity.CreationDateTime.Should().Be(rebuildDto.CreationDateTime);
+        entity.Id.Should().Be(rebuildDto.Id);
     }
 }

@@ -1,4 +1,5 @@
-﻿using FoSouzaDev.FinancialControl.Domain.Entities;
+﻿using FoSouzaDev.FinancialControl.Domain.DataTransferObjects;
+using FoSouzaDev.FinancialControl.Domain.Entities;
 using FoSouzaDev.FinancialControl.Domain.Factories.Interfaces;
 using FoSouzaDev.FinancialControl.Domain.Repositories;
 using FoSouzaDev.FinancialControl.Infrastructure.DataEntities;
@@ -28,7 +29,12 @@ internal sealed class FinancialMovementCategoryRepository
         FinancialMovementCategory entity = null;
 
         if (dataEntity != null)
-            entity = factory.RebuildEntity(dataEntity.Name, dataEntity.CreationDateTime, dataEntity.Id);
+            entity = await factory.RebuildEntityAsync(new FinancialMovementCategoryRebuildDto
+            {
+                Name = dataEntity.Name,
+                CreationDateTime = dataEntity.CreationDateTime,
+                Id = dataEntity.Id
+            });
 
         return entity;
     }
@@ -37,7 +43,12 @@ internal sealed class FinancialMovementCategoryRepository
     {
         FinancialMovementCategoryDataEntity dataEntity = await genericRepository.GetByIdOrThrowAsync(id);
 
-        return factory.RebuildEntity(dataEntity.Name, dataEntity.CreationDateTime, dataEntity.Id);
+        return await factory.RebuildEntityAsync(new FinancialMovementCategoryRebuildDto
+        {
+            Name = dataEntity.Name,
+            CreationDateTime = dataEntity.CreationDateTime,
+            Id = dataEntity.Id
+        });
     }
 
     public async Task UpdateAsync(FinancialMovementCategory entity) =>

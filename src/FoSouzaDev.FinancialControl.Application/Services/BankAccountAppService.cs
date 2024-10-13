@@ -1,5 +1,6 @@
 ﻿using FoSouzaDev.FinancialControl.Application.DataTransferObjects;
 using FoSouzaDev.FinancialControl.Application.Services.Interfaces;
+using FoSouzaDev.FinancialControl.Domain.DataTransferObjects;
 using FoSouzaDev.FinancialControl.Domain.Entities;
 using FoSouzaDev.FinancialControl.Domain.Factories.Interfaces;
 using FoSouzaDev.FinancialControl.Domain.Repositories;
@@ -14,7 +15,12 @@ internal sealed class BankAccountAppService
 {
     public async Task<Guid> AddAsync(AddBankAccountDto dto)
     {
-        BankAccount entity = factory.CreateEntity(dto.Name, dto.Description, (byte)dto.Type);
+        BankAccount entity = await factory.CreateEntityAsync(new BankAccountCreateDto
+        {
+            Name = dto.Name,
+            Description = dto.Description,
+            Type = (byte)dto.Type
+        });
         await repository.AddAsync(entity);
 
         return entity.Id;

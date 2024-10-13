@@ -10,10 +10,10 @@ public interface IDomainFactory<TEntity, TCreateDto, TRebuildDto>
     /// <summary>
     /// Utilizado pela camada de aplicação para criar a entidade com os dados da requisição
     /// </summary>
-    TEntity CreateEntity(TCreateDto dto);
+    Task<TEntity> CreateEntityAsync(TCreateDto dto);
 
     /// <summary>
     /// Utilizado pela camada de Infrastructure para recriar a entidade com os dados do banco de dados
     /// </summary>
-    TEntity RebuildEntity(TRebuildDto dto);
+    Task<TEntity> RebuildEntityAsync(TRebuildDto dto);
 }

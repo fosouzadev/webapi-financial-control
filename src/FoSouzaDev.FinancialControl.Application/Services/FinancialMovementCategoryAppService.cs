@@ -1,5 +1,6 @@
 ﻿using FoSouzaDev.FinancialControl.Application.DataTransferObjects;
 using FoSouzaDev.FinancialControl.Application.Services.Interfaces;
+using FoSouzaDev.FinancialControl.Domain.DataTransferObjects;
 using FoSouzaDev.FinancialControl.Domain.Entities;
 using FoSouzaDev.FinancialControl.Domain.Factories.Interfaces;
 using FoSouzaDev.FinancialControl.Domain.Repositories;
@@ -14,7 +15,7 @@ internal sealed class FinancialMovementCategoryAppService
 {
     public async Task<Guid> AddAsync(AddFinancialMovementCategoryDto dto)
     {
-        FinancialMovementCategory entity = factory.CreateEntity(dto.Name);
+        FinancialMovementCategory entity = await factory.CreateEntityAsync(new FinancialMovementCategoryCreateDto { Name = dto.Name });
         await repository.AddAsync(entity);
 
         return entity.Id;

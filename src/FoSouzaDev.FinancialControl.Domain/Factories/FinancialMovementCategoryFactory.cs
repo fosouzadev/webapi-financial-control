@@ -7,14 +7,14 @@ namespace FoSouzaDev.FinancialControl.Domain.Factories;
 
 internal sealed class FinancialMovementCategoryFactory : IFinancialMovementCategoryFactory
 {
-    public FinancialMovementCategory CreateEntity(FinancialMovementCategoryCreateDto dto) =>
-        RebuildEntity(new FinancialMovementCategoryRebuildDto
+    public Task<FinancialMovementCategory> CreateEntityAsync(FinancialMovementCategoryCreateDto dto) =>
+        RebuildEntityAsync(new FinancialMovementCategoryRebuildDto
         {
             Name = dto.Name,
             CreationDateTime = DateTimeOffset.UtcNow,
             Id = Guid.NewGuid()
         });
 
-    public FinancialMovementCategory RebuildEntity(FinancialMovementCategoryRebuildDto dto) =>
-        new(new Name(dto.Name), dto.CreationDateTime, dto.Id);
+    public Task<FinancialMovementCategory> RebuildEntityAsync(FinancialMovementCategoryRebuildDto dto) =>
+        Task.FromResult(new FinancialMovementCategory(new Name(dto.Name), dto.CreationDateTime, dto.Id));
 }
